@@ -34,44 +34,21 @@ public class MDE4CPPCompile extends DefaultTask
 		}
 	}
 	
-	private String projectName;
-	private String sourceFolderName;
-	private String rootFolder;
+	private String pathToCMakeList;
 	
 	
 	public MDE4CPPCompile()
 	{
-		projectName = "";
-		sourceFolderName = "src";
-		rootFolder = new File(".").getAbsolutePath();
-	}
-	
-	public String getSourceFolderName()
-	{
-		return sourceFolderName;
-	}	
-	public void setSourceFolderName(String sourceFolderName)
-	{
-		this.sourceFolderName = sourceFolderName;
+		pathToCMakeList = new File(".").getAbsolutePath();
 	}
 
-	public String getRootFolder()
+	public String getPathToCMakeList()
 	{
-		return rootFolder;
+		return pathToCMakeList;
 	}	
-	public void setRootFolder(String rootFolder)
+	public void setPathToCMakeList(String pathToCMakeList)
 	{
-		this.rootFolder = rootFolder;
-	}
-
-	
-	public String getProjectName()
-	{
-		return projectName;
-	}	
-	public void setProjectName(String projectName)
-	{
-		this.projectName = projectName;
+		this.pathToCMakeList = pathToCMakeList;
 	}
 	
 	private boolean isDebugModeActive()
@@ -151,8 +128,7 @@ public class MDE4CPPCompile extends DefaultTask
 	
 	private void compileBuildMode(BUILD_MODE buildMode)
 	{
-		String projectPath = rootFolder + File.separator + sourceFolderName + File.separator + projectName;
-		String buildPath = projectPath + File.separator + ".cmake" + File.separator + buildMode.getName();
+		String buildPath = pathToCMakeList + File.separator + ".cmake" + File.separator + buildMode.getName();
 		File folder = new File(buildPath);
 		if (!folder.exists())
 		{
@@ -164,7 +140,7 @@ public class MDE4CPPCompile extends DefaultTask
 			commandList.add("cmd");
 			commandList.add("/c");
 		}
-		commandList.add("cmake -G \"" + getCMakeGenerator() + "\" -D CMAKE_BUILD_TYPE=" + buildMode + " " + new File(projectPath).getAbsolutePath());
+		commandList.add("cmake -G \"" + getCMakeGenerator() + "\" -D CMAKE_BUILD_TYPE=" + buildMode + " " + new File(pathToCMakeList).getAbsolutePath());
 		executeProcess(commandList, folder);
 		
 		commandList.set(commandList.size()-1, getMakeCommand());
