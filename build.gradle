@@ -1,0 +1,7 @@
+task createGradleCompilePlugin(dependsOn: ['GradleCompilePlugin:clean', 'GradleCompilePlugin:build', 'GradleCompilePlugin:uploadArchives']) {
+	group 'base'
+	description 'create gradle plugin to compile MDE4CPP C++ projects'
+}
+
+tasks.getByPath('GradleCompilePlugin:build').mustRunAfter tasks.getByPath('GradleCompilePlugin:clean')
+tasks.getByPath('GradleCompilePlugin:uploadArchives').mustRunAfter tasks.getByPath('GradleCompilePlugin:build')
