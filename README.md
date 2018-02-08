@@ -1,2 +1,2 @@
 # gradlePlugins
-necessary Gradle plugin for building MDE4CPP
+necessary Gradle plugins for building MDE4CPP
