@@ -1,7 +1,6 @@
-task createGradleCompilePlugin(dependsOn: ['GradleCompilePlugin:clean', 'GradleCompilePlugin:build', 'GradleCompilePlugin:uploadArchives']) {
+task createMDE4CPPCompilePlugin(dependsOn: ['MDE4CPPCompilePlugin:clean', 'MDE4CPPCompilePlugin:jar']) {
 	group 'base'
 	description 'create gradle plugin to compile MDE4CPP C++ projects'
 }
 
-tasks.getByPath('GradleCompilePlugin:build').mustRunAfter tasks.getByPath('GradleCompilePlugin:clean')
-tasks.getByPath('GradleCompilePlugin:uploadArchives').mustRunAfter tasks.getByPath('GradleCompilePlugin:build')
+tasks.getByPath('MDE4CPPCompilePlugin:jar').mustRunAfter tasks.getByPath('MDE4CPPCompilePlugin:clean')

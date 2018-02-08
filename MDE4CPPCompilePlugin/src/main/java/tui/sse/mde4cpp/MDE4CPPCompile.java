@@ -14,7 +14,7 @@ import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.Task;
 import org.gradle.api.Project;
 
-public class Compile extends DefaultTask 
+public class MDE4CPPCompile extends DefaultTask 
 {
 	private enum BUILD_MODE
 	{
@@ -39,7 +39,7 @@ public class Compile extends DefaultTask
 	private String rootFolder;
 	
 	
-	public Compile()
+	public MDE4CPPCompile()
 	{
 		projectName = "";
 		sourceFolderName = "src";
