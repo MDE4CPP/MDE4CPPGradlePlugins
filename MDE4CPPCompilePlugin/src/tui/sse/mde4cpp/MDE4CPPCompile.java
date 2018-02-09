@@ -1,18 +1,14 @@
 package tui.sse.mde4cpp;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
-import org.gradle.api.Task;
 import org.gradle.api.Project;
 
 public class MDE4CPPCompile extends DefaultTask
