@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.gradle.api.DefaultTask;
+import org.gradle.api.GradleException;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.Project;
 
@@ -105,7 +106,7 @@ public class MDE4CPPCompile extends DefaultTask
 		return getMakeTool() + " install" + parallel;
 	}
 
-	private void executeProcess(List<String> commandList, File workingDir, BUILD_MODE buildMode)
+	private boolean executeProcess(List<String> commandList, File workingDir, BUILD_MODE buildMode)
 	{
 		try
 		{
@@ -118,11 +119,14 @@ public class MDE4CPPCompile extends DefaultTask
 			inputThread.start();
 			errorThread.start();
 
-			process.waitFor();
+			int code = process.waitFor();
+			
+			return code == 0;
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
+			return false;
 		}
 	}
 
@@ -142,10 +146,17 @@ public class MDE4CPPCompile extends DefaultTask
 		}
 		commandList.add("cmake -G \"" + getCMakeGenerator() + "\" -D CMAKE_BUILD_TYPE=" + buildMode.getName() + " "
 				+ new File(pathToCMakeList).getAbsolutePath());
-		executeProcess(commandList, folder, null);
+		
+		if (!executeProcess(commandList, folder, buildMode))
+		{
+			throw new GradleException("Compilation failed during cmake execution!");
+		}
 
 		commandList.set(commandList.size() - 1, getMakeCommand());
-		executeProcess(commandList, folder, null);
+		if(!executeProcess(commandList, folder, null))
+		{
+			throw new GradleException("Compilation failed during " + getMakeTool() + " execution!");
+		}
 	}
 
 	@TaskAction
