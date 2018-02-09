@@ -81,6 +81,18 @@ public class MDE4CPPCompile extends DefaultTask
 		}
 	}
 
+	private String getMakeTool()
+	{
+		if (isWindowsSystem())
+		{
+			return "mingw32-make";
+		}
+		else
+		{
+			return "make";
+		}
+	}
+	
 	private String getMakeCommand()
 	{
 		Project project = getProject();
@@ -90,14 +102,7 @@ public class MDE4CPPCompile extends DefaultTask
 			parallel = " -j" + project.property("make_parallel_jobs");
 		}
 
-		if (isWindowsSystem())
-		{
-			return "mingw32-make install" + parallel;
-		}
-		else
-		{
-			return "make install" + parallel;
-		}
+		return getMakeTool() + " install" + parallel;
 	}
 
 	private void executeProcess(List<String> commandList, File workingDir)
