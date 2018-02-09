@@ -139,7 +139,7 @@ public class MDE4CPPCompile extends DefaultTask
 			commandList.add("cmd");
 			commandList.add("/c");
 		}
-		commandList.add("cmake -G \"" + getCMakeGenerator() + "\" -D CMAKE_BUILD_TYPE=" + buildMode + " " + new File(pathToCMakeList).getAbsolutePath());
+		commandList.add("cmake -G \"" + getCMakeGenerator() + "\" -D CMAKE_BUILD_TYPE=" + buildMode.getName() + " " + new File(pathToCMakeList).getAbsolutePath());
 		executeProcess(commandList, folder);
 		
 		commandList.set(commandList.size()-1, getMakeCommand());
