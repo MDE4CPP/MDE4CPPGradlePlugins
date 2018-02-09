@@ -17,6 +17,16 @@ public class MDE4CPPCompile extends DefaultTask
 		pathToCMakeList = new File(".").getAbsolutePath();
 	}
 
+	public String getPathToCMakeList()
+	{
+		return pathToCMakeList;
+	}
+
+	public void setPathToCMakeList(String pathToCMakeList)
+	{
+		this.pathToCMakeList = pathToCMakeList;
+	}
+
 	private void compileBuildMode(BUILD_MODE buildMode)
 	{
 		String buildPath = pathToCMakeList + File.separator + ".cmake" + File.separator + buildMode.getName();
@@ -77,15 +87,5 @@ public class MDE4CPPCompile extends DefaultTask
 		{
 			compileBuildMode(BUILD_MODE.RELEASE);
 		}
-	}
-
-	public String getPathToCMakeList()
-	{
-		return pathToCMakeList;
-	}
-
-	public void setPathToCMakeList(String pathToCMakeList)
-	{
-		this.pathToCMakeList = pathToCMakeList;
 	}
 }

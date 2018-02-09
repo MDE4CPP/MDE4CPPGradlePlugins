@@ -20,6 +20,17 @@ class CommandBuilder
 		}
 	}
 
+	static private List<String> initialCommandList()
+	{
+		List<String> commandList = new LinkedList<>();
+		if (isWindowsSystem())
+		{
+			commandList.add("cmd");
+			commandList.add("/c");
+		}
+		return commandList;
+	}
+
 	private static boolean isWindowsSystem()
 	{
 		return System.getProperty("os.name").toLowerCase().contains("windows");
@@ -49,16 +60,5 @@ class CommandBuilder
 		{
 			return "make";
 		}
-	}
-
-	static private List<String> initialCommandList()
-	{
-		List<String> commandList = new LinkedList<>();
-		if (isWindowsSystem())
-		{
-			commandList.add("cmd");
-			commandList.add("/c");
-		}
-		return commandList;
 	}
 }
