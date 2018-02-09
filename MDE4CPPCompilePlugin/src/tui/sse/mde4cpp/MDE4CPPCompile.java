@@ -10,35 +10,50 @@ import org.gradle.api.tasks.TaskAction;
 
 public class MDE4CPPCompile extends DefaultTask
 {
-	private String pathToCMakeList;
+	private String projectFolder = null;
 
-	public MDE4CPPCompile()
+	public String getProjectFolder()
 	{
-		pathToCMakeList = new File(".").getAbsolutePath();
+		return projectFolder;
 	}
 
-	public String getPathToCMakeList()
+	public void setProjectFolder(String projectFolder)
 	{
-		return pathToCMakeList;
+		this.projectFolder = projectFolder;
 	}
 
-	public void setPathToCMakeList(String pathToCMakeList)
+	private void checkInput()
 	{
-		this.pathToCMakeList = pathToCMakeList;
-	}
+		if (projectFolder == null)
+		{
+			throw new GradleException("Property 'projectFolder' is not set!\r\nConfigure the project folder containing 'CMakeLists.txt' with project build instructions.");
+		}
+		
+		File folder = new File(projectFolder);
+		if (!folder.isDirectory())
+		{
+			throw new GradleException("The folder '" + folder.getAbsolutePath() + "' does not exists!");
+		}
 
+		File cmakeFile = new File(projectFolder + File.separator + "CMakeLists.txt");
+		if (!cmakeFile.isFile())
+		{
+			throw new GradleException("The folder '" + folder.getAbsolutePath() + "' does not contain a 'CMakeLists.txt' file!");
+		}
+	}
+	
 	private void compileBuildMode(BUILD_MODE buildMode)
 	{
-		String buildPath = pathToCMakeList + File.separator + ".cmake" + File.separator + buildMode.getName();
-		File projectFolder = new File(pathToCMakeList);
+		String buildPath = projectFolder + File.separator + ".cmake" + File.separator + buildMode.getName();
+		File projectFolderFile = new File(projectFolder);
 		File folder = new File(buildPath);
 		if (!folder.exists())
 		{
 			folder.mkdirs();
 		}
 
-		List<String> command = CommandBuilder.getCMakeCommand(buildMode, projectFolder);
-		String startingMessage = "Compiling " + projectFolder.getName() + " with " + buildMode.getName() + " options";
+		List<String> command = CommandBuilder.getCMakeCommand(buildMode, projectFolderFile);
+		String startingMessage = "Compiling " + projectFolderFile.getName() + " with " + buildMode.getName() + " options";
 		if (!executeProcess(command, folder, startingMessage))
 		{
 			throw new GradleException("Compilation failed during cmake execution!");
@@ -78,6 +93,8 @@ public class MDE4CPPCompile extends DefaultTask
 	@TaskAction
 	void executeCompile()
 	{
+		checkInput();
+		
 		Project project = getProject();
 		if (GradlePropertyAnalyser.isDebugBuildModeRequestet(project))
 		{

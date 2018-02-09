@@ -12,7 +12,7 @@ public class MDE4CPPCompilePlugin implements Plugin<Project>
 	{
 		project.getTasks().create("compile", MDE4CPPCompile.class, (task) ->
 		{
-			task.setPathToCMakeList(new File(".").getAbsolutePath());
+			task.setProjectFolder(new File(".").getAbsolutePath());
 		});
 	}
 }
