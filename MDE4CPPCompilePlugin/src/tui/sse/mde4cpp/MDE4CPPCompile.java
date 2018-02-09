@@ -105,7 +105,7 @@ public class MDE4CPPCompile extends DefaultTask
 		return getMakeTool() + " install" + parallel;
 	}
 
-	private void executeProcess(List<String> commandList, File workingDir)
+	private void executeProcess(List<String> commandList, File workingDir, BUILD_MODE buildMode)
 	{
 		try
 		{
@@ -113,8 +113,8 @@ public class MDE4CPPCompile extends DefaultTask
 			processBuilder.directory(workingDir);
 
 			Process process = processBuilder.start();
-			ProcessInputStreamThread inputThread = new ProcessInputStreamThread(process.getInputStream(), false);
-			ProcessInputStreamThread errorThread = new ProcessInputStreamThread(process.getErrorStream(), true);
+			ProcessInputStreamThread inputThread = new ProcessInputStreamThread(process.getInputStream(), false, buildMode);
+			ProcessInputStreamThread errorThread = new ProcessInputStreamThread(process.getErrorStream(), true, null);
 			inputThread.start();
 			errorThread.start();
 
@@ -142,10 +142,10 @@ public class MDE4CPPCompile extends DefaultTask
 		}
 		commandList.add("cmake -G \"" + getCMakeGenerator() + "\" -D CMAKE_BUILD_TYPE=" + buildMode.getName() + " "
 				+ new File(pathToCMakeList).getAbsolutePath());
-		executeProcess(commandList, folder);
+		executeProcess(commandList, folder, null);
 
 		commandList.set(commandList.size() - 1, getMakeCommand());
-		executeProcess(commandList, folder);
+		executeProcess(commandList, folder, null);
 	}
 
 	@TaskAction
@@ -165,11 +165,13 @@ public class MDE4CPPCompile extends DefaultTask
 	{
 		private InputStream m_stream;
 		private boolean m_isErrorSteam = false;
+		private BUILD_MODE m_buildMode;
 
-		private ProcessInputStreamThread(InputStream steam, boolean isErrorStream)
+		private ProcessInputStreamThread(InputStream steam, boolean isErrorStream, BUILD_MODE buildMode)
 		{
 			m_stream = steam;
 			m_isErrorSteam = isErrorStream;
+			m_buildMode = buildMode;
 		}
 
 		@Override
@@ -179,6 +181,10 @@ public class MDE4CPPCompile extends DefaultTask
 			{
 				BufferedReader reader = new BufferedReader(new InputStreamReader(m_stream));
 				String line;
+				if (m_buildMode != null)
+				{
+					System.out.println("Compiling with " + m_buildMode.getName() + " options");
+				}
 				while ((line = reader.readLine()) != null)
 				{
 					if (m_isErrorSteam)
