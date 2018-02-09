@@ -3,6 +3,7 @@ package tui.sse.mde4cpp;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.file.Files;
@@ -109,14 +110,12 @@ public class MDE4CPPCompile extends DefaultTask
 		{
 			ProcessBuilder processBuilder = new ProcessBuilder(commandList);
 			processBuilder.directory(workingDir);
+
 			Process process = processBuilder.start();
-	
-			BufferedReader reader = new BufferedReader (new InputStreamReader(process.getInputStream()));
-			String line;
-			while ((line = reader.readLine()) != null) 
-			{
-				System.out.println(line);
-			}
+			ProcessInputStreamThread inputThread = new ProcessInputStreamThread(process.getInputStream(), false);
+			ProcessInputStreamThread errorThread = new ProcessInputStreamThread(process.getErrorStream(), true);
+			inputThread.start();
+			errorThread.start();
 			
 			process.waitFor();
 		}
@@ -158,6 +157,43 @@ public class MDE4CPPCompile extends DefaultTask
 		if (isReleaseModeActive())
 		{
 			compileBuildMode(BUILD_MODE.RELEASE);
+		}
+	}
+	
+	private class ProcessInputStreamThread extends Thread
+	{
+		private InputStream m_stream;
+		private boolean m_isErrorSteam = false;
+		
+		private ProcessInputStreamThread(InputStream steam, boolean isErrorStream)
+		{
+			m_stream = steam;
+			m_isErrorSteam = isErrorStream;
+		}
+		
+		@Override
+		public void run()
+		{
+			try
+			{
+				BufferedReader reader = new BufferedReader (new InputStreamReader(m_stream));
+				String line;
+				while ((line = reader.readLine()) != null) 
+				{
+					if (m_isErrorSteam)
+					{
+						System.err.println(line);
+					}
+					else
+					{
+						System.out.println(line);
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 }
