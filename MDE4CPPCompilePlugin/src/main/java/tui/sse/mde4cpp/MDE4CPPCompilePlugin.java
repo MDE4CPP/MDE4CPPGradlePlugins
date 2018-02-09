@@ -8,7 +8,8 @@ public class MDE4CPPCompilePlugin implements Plugin<Project>
 {
 	public void apply(Project project)
 	{
-		project.getTasks().create("compile", MDE4CPPCompile.class, (task) -> {
+		project.getTasks().create("compile", MDE4CPPCompile.class, (task) ->
+		{
 			task.setPathToCMakeList(new File(".").getAbsolutePath());
 		});
 	}

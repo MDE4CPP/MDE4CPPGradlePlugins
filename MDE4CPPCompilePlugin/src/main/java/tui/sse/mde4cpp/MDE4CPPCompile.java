@@ -15,29 +15,28 @@ import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.Task;
 import org.gradle.api.Project;
 
-public class MDE4CPPCompile extends DefaultTask 
+public class MDE4CPPCompile extends DefaultTask
 {
 	private enum BUILD_MODE
 	{
 		DEBUG("Debug"),
 		RELEASE("Release");
-		
+
 		private final String name;
-		
+
 		private BUILD_MODE(String name)
 		{
 			this.name = name;
 		}
-		
+
 		private String getName()
 		{
 			return name;
 		}
 	}
-	
+
 	private String pathToCMakeList;
-	
-	
+
 	public MDE4CPPCompile()
 	{
 		pathToCMakeList = new File(".").getAbsolutePath();
@@ -46,32 +45,34 @@ public class MDE4CPPCompile extends DefaultTask
 	public String getPathToCMakeList()
 	{
 		return pathToCMakeList;
-	}	
+	}
+
 	public void setPathToCMakeList(String pathToCMakeList)
 	{
 		this.pathToCMakeList = pathToCMakeList;
 	}
-	
+
 	private boolean isDebugModeActive()
 	{
-		Project project  = getProject();
+		Project project = getProject();
 		return (project.hasProperty("DEBUG") && project.property("DEBUG") != "0")
-			|| (project.hasProperty("D") && project.property("D") != "0")
-			|| (!project.hasProperty("RELEASE") && !project.hasProperty("R") && !project.hasProperty("DEBUG") && !project.hasProperty("D"));
+				|| (project.hasProperty("D") && project.property("D") != "0") || (!project.hasProperty("RELEASE")
+						&& !project.hasProperty("R") && !project.hasProperty("DEBUG") && !project.hasProperty("D"));
 	}
+
 	private boolean isReleaseModeActive()
 	{
-		Project project  = getProject();
+		Project project = getProject();
 		return (project.hasProperty("RELEASE") && project.property("RELEASE") != "0")
-			|| (project.hasProperty("R") && project.property("R") != "0")
-			|| (!project.hasProperty("RELEASE") && !project.hasProperty("R") && !project.hasProperty("DEBUG") && !project.hasProperty("D"));
+				|| (project.hasProperty("R") && project.property("R") != "0") || (!project.hasProperty("RELEASE")
+						&& !project.hasProperty("R") && !project.hasProperty("DEBUG") && !project.hasProperty("D"));
 	}
-	
+
 	private boolean isWindowsSystem()
 	{
 		return System.getProperty("os.name").toLowerCase().contains("windows");
 	}
-	
+
 	private String getCMakeGenerator()
 	{
 		if (isWindowsSystem())
@@ -83,16 +84,16 @@ public class MDE4CPPCompile extends DefaultTask
 			return "Unix Makefiles";
 		}
 	}
-	
+
 	private String getMakeCommand()
 	{
-		Project project  = getProject();
+		Project project = getProject();
 		String parallel = "";
 		if (project.hasProperty("make_parallel_jobs"))
-		{			
+		{
 			parallel = " -j" + project.property("make_parallel_jobs");
 		}
-		
+
 		if (isWindowsSystem())
 		{
 			return "mingw32-make install" + parallel;
@@ -102,8 +103,7 @@ public class MDE4CPPCompile extends DefaultTask
 			return "make install" + parallel;
 		}
 	}
-	
-	
+
 	private void executeProcess(List<String> commandList, File workingDir)
 	{
 		try
@@ -116,7 +116,7 @@ public class MDE4CPPCompile extends DefaultTask
 			ProcessInputStreamThread errorThread = new ProcessInputStreamThread(process.getErrorStream(), true);
 			inputThread.start();
 			errorThread.start();
-			
+
 			process.waitFor();
 		}
 		catch (Exception e)
@@ -124,7 +124,7 @@ public class MDE4CPPCompile extends DefaultTask
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void compileBuildMode(BUILD_MODE buildMode)
 	{
 		String buildPath = pathToCMakeList + File.separator + ".cmake" + File.separator + buildMode.getName();
@@ -139,17 +139,17 @@ public class MDE4CPPCompile extends DefaultTask
 			commandList.add("cmd");
 			commandList.add("/c");
 		}
-		commandList.add("cmake -G \"" + getCMakeGenerator() + "\" -D CMAKE_BUILD_TYPE=" + buildMode.getName() + " " + new File(pathToCMakeList).getAbsolutePath());
+		commandList.add("cmake -G \"" + getCMakeGenerator() + "\" -D CMAKE_BUILD_TYPE=" + buildMode.getName() + " "
+				+ new File(pathToCMakeList).getAbsolutePath());
 		executeProcess(commandList, folder);
-		
-		commandList.set(commandList.size()-1, getMakeCommand());
+
+		commandList.set(commandList.size() - 1, getMakeCommand());
 		executeProcess(commandList, folder);
 	}
-	
-	
+
 	@TaskAction
 	void executeCompile()
-	{	
+	{
 		if (isDebugModeActive())
 		{
 			compileBuildMode(BUILD_MODE.DEBUG);
@@ -159,26 +159,26 @@ public class MDE4CPPCompile extends DefaultTask
 			compileBuildMode(BUILD_MODE.RELEASE);
 		}
 	}
-	
+
 	private class ProcessInputStreamThread extends Thread
 	{
 		private InputStream m_stream;
 		private boolean m_isErrorSteam = false;
-		
+
 		private ProcessInputStreamThread(InputStream steam, boolean isErrorStream)
 		{
 			m_stream = steam;
 			m_isErrorSteam = isErrorStream;
 		}
-		
+
 		@Override
 		public void run()
 		{
 			try
 			{
-				BufferedReader reader = new BufferedReader (new InputStreamReader(m_stream));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(m_stream));
 				String line;
-				while ((line = reader.readLine()) != null) 
+				while ((line = reader.readLine()) != null)
 				{
 					if (m_isErrorSteam)
 					{
