@@ -28,7 +28,7 @@ class ProcessInputStreamThread extends Thread
 			{
 				String highlighting = new String(new char[m_message.length() + 4]).replace('\0', '#');
 				System.out.println(highlighting);
-				System.out.println("§ " + m_message + " #");
+				System.out.println("# " + m_message + " #");
 				System.out.println(highlighting);
 			}
 			while ((line = reader.readLine()) != null)
