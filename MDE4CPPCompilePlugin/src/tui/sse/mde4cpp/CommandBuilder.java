@@ -34,14 +34,8 @@ class CommandBuilder
 
 	static List<String> getMakeCommand(Project project)
 	{
-		String parallel = "";
-		if (project.hasProperty("make_parallel_jobs"))
-		{
-			parallel = " -j" + project.property("make_parallel_jobs");
-		}
-		
 		List<String> commandList = CommandBuilder.initialCommandList();
-		commandList.add(getMakeTool() + " install" + parallel);
+		commandList.add(getMakeTool() + " install" + GradlePropertyAnalyser.getParallelJobsFlag(project));
 		return commandList;
 	}
 

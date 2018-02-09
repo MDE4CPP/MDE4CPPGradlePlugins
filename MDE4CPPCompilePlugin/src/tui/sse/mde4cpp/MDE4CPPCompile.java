@@ -26,9 +26,9 @@ public class MDE4CPPCompile extends DefaultTask
 		{
 			folder.mkdirs();
 		}
-		
+
 		List<String> command = CommandBuilder.getCMakeCommand(buildMode, projectFolder);
-		String startingMessage = "Compiling " + projectFolder.getName() + " with " + buildMode.getName() + " options";				
+		String startingMessage = "Compiling " + projectFolder.getName() + " with " + buildMode.getName() + " options";
 		if (!executeProcess(command, folder, startingMessage))
 		{
 			throw new GradleException("Compilation failed during cmake execution!");
@@ -41,19 +41,6 @@ public class MDE4CPPCompile extends DefaultTask
 		}
 	}
 
-	@TaskAction
-	void executeCompile()
-	{
-		if (isDebugModeActive())
-		{
-			compileBuildMode(BUILD_MODE.DEBUG);
-		}
-		if (isReleaseModeActive())
-		{
-			compileBuildMode(BUILD_MODE.RELEASE);
-		}
-	}
-
 	private boolean executeProcess(List<String> commandList, File workingDir, String message)
 	{
 		try
@@ -62,8 +49,7 @@ public class MDE4CPPCompile extends DefaultTask
 			processBuilder.directory(workingDir);
 
 			Process process = processBuilder.start();
-			ProcessInputStreamThread inputThread = new ProcessInputStreamThread(process.getInputStream(), false,
-					message);
+			ProcessInputStreamThread inputThread = new ProcessInputStreamThread(process.getInputStream(), false, message);
 			ProcessInputStreamThread errorThread = new ProcessInputStreamThread(process.getErrorStream(), true, null);
 			inputThread.start();
 			errorThread.start();
@@ -79,27 +65,24 @@ public class MDE4CPPCompile extends DefaultTask
 		}
 	}
 
+	@TaskAction
+	void executeCompile()
+	{
+		Project project = getProject();
+		if (GradlePropertyAnalyser.isDebugModeActive(project))
+		{
+			compileBuildMode(BUILD_MODE.DEBUG);
+		}
+		if (GradlePropertyAnalyser.isReleaseModeActive(project))
+		{
+			compileBuildMode(BUILD_MODE.RELEASE);
+		}
+	}
+
 	public String getPathToCMakeList()
 	{
 		return pathToCMakeList;
 	}
-
-	private boolean isDebugModeActive()
-	{
-		Project project = getProject();
-		return (project.hasProperty("DEBUG") && project.property("DEBUG") != "0")
-				|| (project.hasProperty("D") && project.property("D") != "0") || (!project.hasProperty("RELEASE")
-						&& !project.hasProperty("R") && !project.hasProperty("DEBUG") && !project.hasProperty("D"));
-	}
-
-	private boolean isReleaseModeActive()
-	{
-		Project project = getProject();
-		return (project.hasProperty("RELEASE") && project.property("RELEASE") != "0")
-				|| (project.hasProperty("R") && project.property("R") != "0") || (!project.hasProperty("RELEASE")
-						&& !project.hasProperty("R") && !project.hasProperty("DEBUG") && !project.hasProperty("D"));
-	}
-
 
 	public void setPathToCMakeList(String pathToCMakeList)
 	{
