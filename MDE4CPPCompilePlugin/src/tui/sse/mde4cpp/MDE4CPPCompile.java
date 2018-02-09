@@ -106,7 +106,7 @@ public class MDE4CPPCompile extends DefaultTask
 		return getMakeTool() + " install" + parallel;
 	}
 
-	private boolean executeProcess(List<String> commandList, File workingDir, BUILD_MODE buildMode)
+	private boolean executeProcess(List<String> commandList, File workingDir, String message)
 	{
 		try
 		{
@@ -114,7 +114,7 @@ public class MDE4CPPCompile extends DefaultTask
 			processBuilder.directory(workingDir);
 
 			Process process = processBuilder.start();
-			ProcessInputStreamThread inputThread = new ProcessInputStreamThread(process.getInputStream(), false, buildMode);
+			ProcessInputStreamThread inputThread = new ProcessInputStreamThread(process.getInputStream(), false, message);
 			ProcessInputStreamThread errorThread = new ProcessInputStreamThread(process.getErrorStream(), true, null);
 			inputThread.start();
 			errorThread.start();
@@ -144,10 +144,12 @@ public class MDE4CPPCompile extends DefaultTask
 			commandList.add("cmd");
 			commandList.add("/c");
 		}
+		File projectFolder = new File(pathToCMakeList);
 		commandList.add("cmake -G \"" + getCMakeGenerator() + "\" -D CMAKE_BUILD_TYPE=" + buildMode.getName() + " "
-				+ new File(pathToCMakeList).getAbsolutePath());
+				+ projectFolder.getAbsolutePath());
 		
-		if (!executeProcess(commandList, folder, buildMode))
+		String message = "Compiling " + projectFolder.getName() + " with " + buildMode.getName() + " options";
+		if (!executeProcess(commandList, folder, message))
 		{
 			throw new GradleException("Compilation failed during cmake execution!");
 		}
@@ -176,13 +178,13 @@ public class MDE4CPPCompile extends DefaultTask
 	{
 		private InputStream m_stream;
 		private boolean m_isErrorSteam = false;
-		private BUILD_MODE m_buildMode;
+		private String m_message;
 
-		private ProcessInputStreamThread(InputStream steam, boolean isErrorStream, BUILD_MODE buildMode)
+		private ProcessInputStreamThread(InputStream steam, boolean isErrorStream, String message)
 		{
 			m_stream = steam;
 			m_isErrorSteam = isErrorStream;
-			m_buildMode = buildMode;
+			m_message = message;
 		}
 
 		@Override
@@ -192,9 +194,12 @@ public class MDE4CPPCompile extends DefaultTask
 			{
 				BufferedReader reader = new BufferedReader(new InputStreamReader(m_stream));
 				String line;
-				if (m_buildMode != null)
+				if (m_message != null)
 				{
-					System.out.println("Compiling with " + m_buildMode.getName() + " options");
+					String highlighting = new String(new char[m_message.length()+4]).replace('\0', '#');
+					System.out.println(highlighting);
+					System.out.println("# " + m_message + " #");
+					System.out.println(highlighting);
 				}
 				while ((line = reader.readLine()) != null)
 				{
