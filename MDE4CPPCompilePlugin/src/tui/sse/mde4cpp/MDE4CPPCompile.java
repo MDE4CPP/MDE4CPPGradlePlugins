@@ -11,24 +11,6 @@ import org.gradle.api.Project;
 
 public class MDE4CPPCompile extends DefaultTask
 {
-	private enum BUILD_MODE
-	{
-		DEBUG("Debug"),
-		RELEASE("Release");
-
-		private final String name;
-
-		private BUILD_MODE(String name)
-		{
-			this.name = name;
-		}
-
-		private String getName()
-		{
-			return name;
-		}
-	}
-
 	private String pathToCMakeList;
 
 	public MDE4CPPCompile()
