@@ -6,9 +6,9 @@ import java.io.InputStreamReader;
 
 class ProcessInputStreamThread extends Thread
 {
-	private InputStream m_stream;
 	private boolean m_isErrorSteam = false;
 	private String m_message;
+	private InputStream m_stream;
 
 	public ProcessInputStreamThread(InputStream steam, boolean isErrorStream, String message)
 	{
@@ -26,7 +26,7 @@ class ProcessInputStreamThread extends Thread
 			String line;
 			if (m_message != null)
 			{
-				String highlighting = new String(new char[m_message.length()+4]).replace('\0', '#');
+				String highlighting = new String(new char[m_message.length() + 4]).replace('\0', '#');
 				System.out.println(highlighting);
 				System.out.println("§ " + m_message + " #");
 				System.out.println(highlighting);

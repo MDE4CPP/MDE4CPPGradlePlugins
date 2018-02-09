@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
-import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.Project;
+import org.gradle.api.tasks.TaskAction;
 
 public class MDE4CPPCompile extends DefaultTask
 {
@@ -18,14 +18,114 @@ public class MDE4CPPCompile extends DefaultTask
 		pathToCMakeList = new File(".").getAbsolutePath();
 	}
 
+	private void compileBuildMode(BUILD_MODE buildMode)
+	{
+		String buildPath = pathToCMakeList + File.separator + ".cmake" + File.separator + buildMode.getName();
+		File folder = new File(buildPath);
+		if (!folder.exists())
+		{
+			folder.mkdirs();
+		}
+		List<String> commandList = new LinkedList<>();
+		if (isWindowsSystem())
+		{
+			commandList.add("cmd");
+			commandList.add("/c");
+		}
+		File projectFolder = new File(pathToCMakeList);
+		commandList.add("cmake -G \"" + getCMakeGenerator() + "\" -D CMAKE_BUILD_TYPE=" + buildMode.getName() + " "
+				+ projectFolder.getAbsolutePath());
+
+		String message = "Compiling " + projectFolder.getName() + " with " + buildMode.getName() + " options";
+		if (!executeProcess(commandList, folder, message))
+		{
+			throw new GradleException("Compilation failed during cmake execution!");
+		}
+
+		commandList.set(commandList.size() - 1, getMakeCommand());
+		if (!executeProcess(commandList, folder, null))
+		{
+			throw new GradleException("Compilation failed during " + getMakeTool() + " execution!");
+		}
+	}
+
+	@TaskAction
+	void executeCompile()
+	{
+		if (isDebugModeActive())
+		{
+			compileBuildMode(BUILD_MODE.DEBUG);
+		}
+		if (isReleaseModeActive())
+		{
+			compileBuildMode(BUILD_MODE.RELEASE);
+		}
+	}
+
+	private boolean executeProcess(List<String> commandList, File workingDir, String message)
+	{
+		try
+		{
+			ProcessBuilder processBuilder = new ProcessBuilder(commandList);
+			processBuilder.directory(workingDir);
+
+			Process process = processBuilder.start();
+			ProcessInputStreamThread inputThread = new ProcessInputStreamThread(process.getInputStream(), false,
+					message);
+			ProcessInputStreamThread errorThread = new ProcessInputStreamThread(process.getErrorStream(), true, null);
+			inputThread.start();
+			errorThread.start();
+
+			int code = process.waitFor();
+
+			return code == 0;
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	private String getCMakeGenerator()
+	{
+		if (isWindowsSystem())
+		{
+			return "MinGW Makefiles";
+		}
+		else
+		{
+			return "Unix Makefiles";
+		}
+	}
+
+	private String getMakeCommand()
+	{
+		Project project = getProject();
+		String parallel = "";
+		if (project.hasProperty("make_parallel_jobs"))
+		{
+			parallel = " -j" + project.property("make_parallel_jobs");
+		}
+
+		return getMakeTool() + " install" + parallel;
+	}
+
+	private String getMakeTool()
+	{
+		if (isWindowsSystem())
+		{
+			return "mingw32-make";
+		}
+		else
+		{
+			return "make";
+		}
+	}
+
 	public String getPathToCMakeList()
 	{
 		return pathToCMakeList;
-	}
-
-	public void setPathToCMakeList(String pathToCMakeList)
-	{
-		this.pathToCMakeList = pathToCMakeList;
 	}
 
 	private boolean isDebugModeActive()
@@ -49,107 +149,8 @@ public class MDE4CPPCompile extends DefaultTask
 		return System.getProperty("os.name").toLowerCase().contains("windows");
 	}
 
-	private String getCMakeGenerator()
+	public void setPathToCMakeList(String pathToCMakeList)
 	{
-		if (isWindowsSystem())
-		{
-			return "MinGW Makefiles";
-		}
-		else
-		{
-			return "Unix Makefiles";
-		}
-	}
-
-	private String getMakeTool()
-	{
-		if (isWindowsSystem())
-		{
-			return "mingw32-make";
-		}
-		else
-		{
-			return "make";
-		}
-	}
-	
-	private String getMakeCommand()
-	{
-		Project project = getProject();
-		String parallel = "";
-		if (project.hasProperty("make_parallel_jobs"))
-		{
-			parallel = " -j" + project.property("make_parallel_jobs");
-		}
-
-		return getMakeTool() + " install" + parallel;
-	}
-
-	private boolean executeProcess(List<String> commandList, File workingDir, String message)
-	{
-		try
-		{
-			ProcessBuilder processBuilder = new ProcessBuilder(commandList);
-			processBuilder.directory(workingDir);
-
-			Process process = processBuilder.start();
-			ProcessInputStreamThread inputThread = new ProcessInputStreamThread(process.getInputStream(), false, message);
-			ProcessInputStreamThread errorThread = new ProcessInputStreamThread(process.getErrorStream(), true, null);
-			inputThread.start();
-			errorThread.start();
-
-			int code = process.waitFor();
-			
-			return code == 0;
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	private void compileBuildMode(BUILD_MODE buildMode)
-	{
-		String buildPath = pathToCMakeList + File.separator + ".cmake" + File.separator + buildMode.getName();
-		File folder = new File(buildPath);
-		if (!folder.exists())
-		{
-			folder.mkdirs();
-		}
-		List<String> commandList = new LinkedList<String>();
-		if (isWindowsSystem())
-		{
-			commandList.add("cmd");
-			commandList.add("/c");
-		}
-		File projectFolder = new File(pathToCMakeList);
-		commandList.add("cmake -G \"" + getCMakeGenerator() + "\" -D CMAKE_BUILD_TYPE=" + buildMode.getName() + " "
-				+ projectFolder.getAbsolutePath());
-		
-		String message = "Compiling " + projectFolder.getName() + " with " + buildMode.getName() + " options";
-		if (!executeProcess(commandList, folder, message))
-		{
-			throw new GradleException("Compilation failed during cmake execution!");
-		}
-
-		commandList.set(commandList.size() - 1, getMakeCommand());
-		if(!executeProcess(commandList, folder, null))
-		{
-			throw new GradleException("Compilation failed during " + getMakeTool() + " execution!");
-		}
-	}
-
-	@TaskAction
-	void executeCompile()
-	{
-		if (isDebugModeActive())
-		{
-			compileBuildMode(BUILD_MODE.DEBUG);
-		}
-		if (isReleaseModeActive())
-		{
-			compileBuildMode(BUILD_MODE.RELEASE);
-		}
+		this.pathToCMakeList = pathToCMakeList;
 	}
 }
