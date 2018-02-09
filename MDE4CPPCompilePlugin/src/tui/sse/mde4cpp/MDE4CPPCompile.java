@@ -69,11 +69,11 @@ public class MDE4CPPCompile extends DefaultTask
 	void executeCompile()
 	{
 		Project project = getProject();
-		if (GradlePropertyAnalyser.isDebugModeActive(project))
+		if (GradlePropertyAnalyser.isDebugBuildModeRequestet(project))
 		{
 			compileBuildMode(BUILD_MODE.DEBUG);
 		}
-		if (GradlePropertyAnalyser.isReleaseModeActive(project))
+		if (GradlePropertyAnalyser.isReleaseBuildModeRequested(project))
 		{
 			compileBuildMode(BUILD_MODE.RELEASE);
 		}

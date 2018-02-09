@@ -16,13 +16,13 @@ class GradlePropertyAnalyser
 		}
 	}
 
-	static boolean isDebugModeActive(Project project)
+	static boolean isDebugBuildModeRequestet(Project project)
 	{
 		return (project.hasProperty("DEBUG") && project.property("DEBUG") != "0") || (project.hasProperty("D") && project.property("D") != "0")
 				|| (!project.hasProperty("RELEASE") && !project.hasProperty("R") && !project.hasProperty("DEBUG") && !project.hasProperty("D"));
 	}
 
-	static boolean isReleaseModeActive(Project project)
+	static boolean isReleaseBuildModeRequested(Project project)
 	{
 		return (project.hasProperty("RELEASE") && project.property("RELEASE") != "0") || (project.hasProperty("R") && project.property("R") != "0")
 				|| (!project.hasProperty("RELEASE") && !project.hasProperty("R") && !project.hasProperty("DEBUG") && !project.hasProperty("D"));
