@@ -1,7 +1,6 @@
 package tui.sse.mde4cpp;
 
 import java.io.File;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.gradle.api.DefaultTask;
@@ -21,31 +20,24 @@ public class MDE4CPPCompile extends DefaultTask
 	private void compileBuildMode(BUILD_MODE buildMode)
 	{
 		String buildPath = pathToCMakeList + File.separator + ".cmake" + File.separator + buildMode.getName();
+		File projectFolder = new File(pathToCMakeList);
 		File folder = new File(buildPath);
 		if (!folder.exists())
 		{
 			folder.mkdirs();
 		}
-		List<String> commandList = new LinkedList<>();
-		if (isWindowsSystem())
-		{
-			commandList.add("cmd");
-			commandList.add("/c");
-		}
-		File projectFolder = new File(pathToCMakeList);
-		commandList.add("cmake -G \"" + getCMakeGenerator() + "\" -D CMAKE_BUILD_TYPE=" + buildMode.getName() + " "
-				+ projectFolder.getAbsolutePath());
-
-		String message = "Compiling " + projectFolder.getName() + " with " + buildMode.getName() + " options";
-		if (!executeProcess(commandList, folder, message))
+		
+		List<String> command = CommandBuilder.getCMakeCommand(buildMode, projectFolder);
+		String startingMessage = "Compiling " + projectFolder.getName() + " with " + buildMode.getName() + " options";				
+		if (!executeProcess(command, folder, startingMessage))
 		{
 			throw new GradleException("Compilation failed during cmake execution!");
 		}
 
-		commandList.set(commandList.size() - 1, getMakeCommand());
-		if (!executeProcess(commandList, folder, null))
+		command = CommandBuilder.getMakeCommand(getProject());
+		if (!executeProcess(command, folder, null))
 		{
-			throw new GradleException("Compilation failed during " + getMakeTool() + " execution!");
+			throw new GradleException("Compilation failed during " + CommandBuilder.getMakeTool() + " execution!");
 		}
 	}
 
@@ -87,42 +79,6 @@ public class MDE4CPPCompile extends DefaultTask
 		}
 	}
 
-	private String getCMakeGenerator()
-	{
-		if (isWindowsSystem())
-		{
-			return "MinGW Makefiles";
-		}
-		else
-		{
-			return "Unix Makefiles";
-		}
-	}
-
-	private String getMakeCommand()
-	{
-		Project project = getProject();
-		String parallel = "";
-		if (project.hasProperty("make_parallel_jobs"))
-		{
-			parallel = " -j" + project.property("make_parallel_jobs");
-		}
-
-		return getMakeTool() + " install" + parallel;
-	}
-
-	private String getMakeTool()
-	{
-		if (isWindowsSystem())
-		{
-			return "mingw32-make";
-		}
-		else
-		{
-			return "make";
-		}
-	}
-
 	public String getPathToCMakeList()
 	{
 		return pathToCMakeList;
@@ -144,10 +100,6 @@ public class MDE4CPPCompile extends DefaultTask
 						&& !project.hasProperty("R") && !project.hasProperty("DEBUG") && !project.hasProperty("D"));
 	}
 
-	private boolean isWindowsSystem()
-	{
-		return System.getProperty("os.name").toLowerCase().contains("windows");
-	}
 
 	public void setPathToCMakeList(String pathToCMakeList)
 	{
