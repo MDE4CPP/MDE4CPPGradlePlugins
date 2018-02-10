@@ -7,14 +7,26 @@ import java.io.InputStreamReader;
 class ProcessInputStreamThread extends Thread
 {
 	private boolean m_isErrorSteam = false;
-	private String m_message;
+	private String m_startingMessage = null;
+	private String m_warningExecPluginExisting = null;
+
+
 	private InputStream m_stream;
 
-	public ProcessInputStreamThread(InputStream steam, boolean isErrorStream, String message)
+	public ProcessInputStreamThread(InputStream steam, boolean isErrorStream)
 	{
 		m_stream = steam;
 		m_isErrorSteam = isErrorStream;
-		m_message = message;
+	}
+	
+	void setStartingMessage(String startingMessage)
+	{
+		m_startingMessage = startingMessage;
+	}
+	
+	public void setWarningExecPluginExisting(String warningExecPluginExisting)
+	{
+		m_warningExecPluginExisting = warningExecPluginExisting;
 	}
 
 	@Override
@@ -24,11 +36,15 @@ class ProcessInputStreamThread extends Thread
 		{
 			BufferedReader reader = new BufferedReader(new InputStreamReader(m_stream));
 			String line;
-			if (m_message != null)
+			if (m_warningExecPluginExisting != null)
 			{
-				String highlighting = new String(new char[m_message.length() + 4]).replace('\0', '#');
+				System.out.println(m_warningExecPluginExisting);
+			}
+			if (m_startingMessage != null)
+			{
+				String highlighting = new String(new char[m_startingMessage.length() + 4]).replace('\0', '#');
 				System.out.println(highlighting);
-				System.out.println("# " + m_message + " #");
+				System.out.println("# " + m_startingMessage + " #");
 				System.out.println(highlighting);
 			}
 			while ((line = reader.readLine()) != null)

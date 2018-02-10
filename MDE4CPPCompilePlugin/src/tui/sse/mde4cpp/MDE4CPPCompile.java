@@ -66,7 +66,7 @@ public class MDE4CPPCompile extends DefaultTask
 		}
 	}
 
-	private boolean executeProcess(List<String> commandList, File workingDir, String message)
+	private boolean executeProcess(List<String> commandList, File workingDir, String startingMessage)
 	{
 		try
 		{
@@ -74,8 +74,9 @@ public class MDE4CPPCompile extends DefaultTask
 			processBuilder.directory(workingDir);
 
 			Process process = processBuilder.start();
-			ProcessInputStreamThread inputThread = new ProcessInputStreamThread(process.getInputStream(), false, message);
-			ProcessInputStreamThread errorThread = new ProcessInputStreamThread(process.getErrorStream(), true, null);
+			ProcessInputStreamThread inputThread = new ProcessInputStreamThread(process.getInputStream(), false);
+			inputThread.setStartingMessage(startingMessage);			
+			ProcessInputStreamThread errorThread = new ProcessInputStreamThread(process.getErrorStream(), true);
 			inputThread.start();
 			errorThread.start();
 
