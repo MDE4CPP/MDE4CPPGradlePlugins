@@ -21,14 +21,14 @@ dependencies {
 }
 
 group = 'tui.sse.mde4cpp'
-version = '0.1'
+version = '0.2'
 
 // The configuration example below shows the minimum required properties
 // configured to publish your plugin to the plugin portal
 pluginBundle {
 	website = 'http://www.gradle.org/'
 	vcsUrl = 'https://github.com/gradle/gradle'
-	description = 'Gradle plugins developed for MDE4CPP framework. More information about MDE4CPP can be found under https://sse.tu-ilmenau.de/mde4cpp. to compile C++ projects of the MDE4CPP framework using CMake'
+	description = 'Gradle plugins developed for MDE4CPP framework. More information about MDE4CPP can be found under https://sse.tu-ilmenau.de/mde4cpp.'
 	tags = ['MDE4CPP']
 
 	plugins {
