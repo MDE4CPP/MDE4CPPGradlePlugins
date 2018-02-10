@@ -26,9 +26,10 @@ public class MDE4CPPCompile extends DefaultTask
 	{
 		if (projectFolder == null)
 		{
-			throw new GradleException("Property 'projectFolder' is not set!\r\nConfigure the project folder containing 'CMakeLists.txt' with project build instructions.");
+			throw new GradleException(
+					"Property 'projectFolder' is not set!\r\n" + "Configure the project folder containing 'CMakeLists.txt' with project build instructions.");
 		}
-		
+
 		File folder = new File(projectFolder);
 		if (!folder.isDirectory())
 		{
@@ -41,7 +42,7 @@ public class MDE4CPPCompile extends DefaultTask
 			throw new GradleException("The folder '" + folder.getAbsolutePath() + "' does not contain a 'CMakeLists.txt' file!");
 		}
 	}
-	
+
 	private void compileBuildMode(BUILD_MODE buildMode)
 	{
 		String buildPath = projectFolder + File.separator + ".cmake" + File.separator + buildMode.getName();
@@ -75,7 +76,7 @@ public class MDE4CPPCompile extends DefaultTask
 
 			Process process = processBuilder.start();
 			ProcessInputStreamThread inputThread = new ProcessInputStreamThread(process.getInputStream(), false);
-			inputThread.setStartingMessage(startingMessage);			
+			inputThread.setStartingMessage(startingMessage);
 			ProcessInputStreamThread errorThread = new ProcessInputStreamThread(process.getErrorStream(), true);
 			inputThread.start();
 			errorThread.start();
@@ -95,7 +96,7 @@ public class MDE4CPPCompile extends DefaultTask
 	void executeCompile()
 	{
 		checkInput();
-		
+
 		Project project = getProject();
 		if (GradlePropertyAnalyser.isDebugBuildModeRequestet(project))
 		{
