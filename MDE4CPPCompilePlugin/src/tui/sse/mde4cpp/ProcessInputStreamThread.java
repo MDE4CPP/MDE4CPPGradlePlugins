@@ -4,29 +4,64 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+/**
+ * Thread for forwarding input and error streams of MDE4CPP compiling processes
+ * to command line.<br>
+ *
+ * Input stream data is send to {@code System.out.println()}<br>
+ * Error stream data is send to {@code System.err.println()}<br>
+ * <br>
+ * Additionally, warning message and starting message can be configured.<br>
+ * If a warning message is defined, this message is printed first.<br>
+ * Configured starting message will be highlighted by '#' framing
+ * afterwards.<br>
+ * Stream data follow.
+ *
+ */
 class ProcessInputStreamThread extends Thread
 {
 	private boolean m_isErrorSteam = false;
 	private String m_startingMessage = null;
-	private String m_warningExecPluginExisting = null;
-
+	private String m_warningMessage = null;
 
 	private InputStream m_stream;
 
+	/**
+	 * Constructor
+	 *
+	 * @param steam
+	 *            the input steam, which should be forwarded
+	 * @param isErrorStream
+	 *            if {@code true} then {@code Systen.err.println()} is used.
+	 *            Otherwise, {@code Systen.out.println()} is used.
+	 */
 	public ProcessInputStreamThread(InputStream steam, boolean isErrorStream)
 	{
 		m_stream = steam;
 		m_isErrorSteam = isErrorStream;
 	}
-	
+
+	/**
+	 * set starting message
+	 *
+	 * @param startingMessage
+	 *            message, which should be highlighted
+	 */
 	void setStartingMessage(String startingMessage)
 	{
 		m_startingMessage = startingMessage;
 	}
-	
-	public void setWarningExecPluginExisting(String warningExecPluginExisting)
+
+	/**
+	 * set warning message
+	 *
+	 * @param warningMessage
+	 *            message, which should be places in front of starting message with
+	 *            'WARNING' tag
+	 */
+	public void setWarningExecPluginExisting(String warningMessage)
 	{
-		m_warningExecPluginExisting = warningExecPluginExisting;
+		m_warningMessage = warningMessage;
 	}
 
 	@Override
@@ -36,9 +71,9 @@ class ProcessInputStreamThread extends Thread
 		{
 			BufferedReader reader = new BufferedReader(new InputStreamReader(m_stream));
 			String line;
-			if (m_warningExecPluginExisting != null)
+			if (m_warningMessage != null)
 			{
-				System.out.println(m_warningExecPluginExisting);
+				System.out.println("WARNING: " + m_warningMessage);
 			}
 			if (m_startingMessage != null)
 			{
