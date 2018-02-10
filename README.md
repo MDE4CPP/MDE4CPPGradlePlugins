@@ -1,4 +1,5 @@
-# gradlePlugins
+# MDE4CPPGradlePlugins
+This repository is part of the MDE4CPP framework. Further information can be found on [framework website](https://sse.tu-ilmenau.de/mde4cpp) and [framework root repository](https://github.com/MDE4CPP/MDE4CPP)
 This repository provides [Gradle](https://gradle.org/) plugins, which are used to build projects with the MDE4CPP framework.
 All plugins are published on [https://plugins.gradle.org/](https://plugins.gradle.org/) with tag 'MDE4CPP'.
 
