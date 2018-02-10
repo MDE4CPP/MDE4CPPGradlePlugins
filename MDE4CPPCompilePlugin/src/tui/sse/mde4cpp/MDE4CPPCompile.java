@@ -11,6 +11,9 @@ import org.gradle.api.tasks.TaskAction;
 public class MDE4CPPCompile extends DefaultTask
 {
 	private String projectFolder = null;
+	private String execProjectFolder = null;
+	private boolean executionBuildActivated = false;
+	private String warningForExecProjectExisting = null;
 
 	public String getProjectFolder()
 	{
@@ -20,6 +23,22 @@ public class MDE4CPPCompile extends DefaultTask
 	public void setProjectFolder(String projectFolder)
 	{
 		this.projectFolder = projectFolder;
+	}
+
+	private void checkExecutionProject()
+	{
+		execProjectFolder = projectFolder + "Exec";
+		File execCmakeFile = new File(execProjectFolder + File.separator + "CMakeLists.txt");
+		executionBuildActivated = execCmakeFile.isFile();
+		if (!executionBuildActivated)
+		{
+			File execFolder = new File(execProjectFolder);
+			if (execFolder.isDirectory())
+			{
+				warningForExecProjectExisting = "Folder '" + execProjectFolder
+						+ "' exists, but does not contain a 'CMakeLists.txt'. Execution project will not be build.";
+			}
+		}
 	}
 
 	private void checkInput()
@@ -43,10 +62,22 @@ public class MDE4CPPCompile extends DefaultTask
 		}
 	}
 
-	private void compileBuildMode(BUILD_MODE buildMode)
+	private void compileBuildMode(BUILD_MODE buildMode, Project project)
 	{
-		String buildPath = projectFolder + File.separator + ".cmake" + File.separator + buildMode.getName();
-		File projectFolderFile = new File(projectFolder);
+		if (!executionBuildActivated || GradlePropertyAnalyser.isStructureBuildRequested(project))
+		{
+			compileProjectWithBuildMode(projectFolder, buildMode);
+		}
+		if (executionBuildActivated && GradlePropertyAnalyser.isExecutionBuildRequested(project))
+		{
+			compileProjectWithBuildMode(execProjectFolder, buildMode);
+		}
+	}
+
+	private void compileProjectWithBuildMode(String projectPath, BUILD_MODE buildMode)
+	{
+		String buildPath = projectPath + File.separator + ".cmake" + File.separator + buildMode.getName();
+		File projectFolderFile = new File(projectPath);
 		File folder = new File(buildPath);
 		if (!folder.exists())
 		{
@@ -55,19 +86,19 @@ public class MDE4CPPCompile extends DefaultTask
 
 		List<String> command = CommandBuilder.getCMakeCommand(buildMode, projectFolderFile);
 		String startingMessage = "Compiling " + projectFolderFile.getName() + " with " + buildMode.getName() + " options";
-		if (!executeProcess(command, folder, startingMessage))
+		if (!executeCompileProcess(command, folder, startingMessage))
 		{
 			throw new GradleException("Compilation failed during cmake execution!");
 		}
 
 		command = CommandBuilder.getMakeCommand(getProject());
-		if (!executeProcess(command, folder, null))
+		if (!executeCompileProcess(command, folder, null))
 		{
 			throw new GradleException("Compilation failed during " + CommandBuilder.getMakeTool() + " execution!");
 		}
 	}
 
-	private boolean executeProcess(List<String> commandList, File workingDir, String startingMessage)
+	private boolean executeCompileProcess(List<String> commandList, File workingDir, String startingMessage)
 	{
 		try
 		{
@@ -77,6 +108,11 @@ public class MDE4CPPCompile extends DefaultTask
 			Process process = processBuilder.start();
 			ProcessInputStreamThread inputThread = new ProcessInputStreamThread(process.getInputStream(), false);
 			inputThread.setStartingMessage(startingMessage);
+			if (warningForExecProjectExisting != null)
+			{
+				inputThread.setWarningExecPluginExisting(warningForExecProjectExisting);
+				warningForExecProjectExisting = null;
+			}
 			ProcessInputStreamThread errorThread = new ProcessInputStreamThread(process.getErrorStream(), true);
 			inputThread.start();
 			errorThread.start();
@@ -96,15 +132,16 @@ public class MDE4CPPCompile extends DefaultTask
 	void executeCompile()
 	{
 		checkInput();
+		checkExecutionProject();
 
 		Project project = getProject();
 		if (GradlePropertyAnalyser.isDebugBuildModeRequestet(project))
 		{
-			compileBuildMode(BUILD_MODE.DEBUG);
+			compileBuildMode(BUILD_MODE.DEBUG, project);
 		}
 		if (GradlePropertyAnalyser.isReleaseBuildModeRequested(project))
 		{
-			compileBuildMode(BUILD_MODE.RELEASE);
+			compileBuildMode(BUILD_MODE.RELEASE, project);
 		}
 	}
 }
