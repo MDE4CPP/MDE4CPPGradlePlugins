@@ -8,6 +8,12 @@ import org.gradle.api.GradleException;
 import org.gradle.api.Project;
 import org.gradle.api.tasks.TaskAction;
 
+/**
+ * Gradle task for compiling C++ projects with the MDE4CPP framework using cmake and gnu compiler<br>
+ * <br>
+ * More information can be found under https://github.com/MDE4CPP/gradlePlugins and http://sse.tu-ilmenau.de/mde4cpp
+ *
+ */
 public class MDE4CPPCompile extends DefaultTask
 {
 	private String projectFolder = null;
@@ -15,16 +21,28 @@ public class MDE4CPPCompile extends DefaultTask
 	private boolean executionBuildActivated = false;
 	private String warningForExecProjectExisting = null;
 
+	/**
+	 * Returns the project folder path
+	 * @return path
+	 */
 	public String getProjectFolder()
 	{
 		return projectFolder;
 	}
 
+	/**
+	 * Set project folder path
+	 * @param projectFolder path to project folder
+	 */
 	public void setProjectFolder(String projectFolder)
 	{
 		this.projectFolder = projectFolder;
 	}
 
+	/**
+	 * Checks, if an execution project is existing near to the specified project<br>
+	 * If exists a project with and {@code projectFolder}Exec containing file {@code CMakeLists.txt}, the compilation of execution project will be enabled
+	 */
 	private void checkExecutionProject()
 	{
 		execProjectFolder = projectFolder + "Exec";
@@ -41,6 +59,9 @@ public class MDE4CPPCompile extends DefaultTask
 		}
 	}
 
+	/**
+	 * checks, if {@code projectFolder} is well defined
+	 */
 	private void checkInput()
 	{
 		if (projectFolder == null)
@@ -62,6 +83,12 @@ public class MDE4CPPCompile extends DefaultTask
 		}
 	}
 
+	/**
+	 * checks, if project compilation is enabled and trigger the compilation 
+	 * 
+	 * @param buildMode build mode indicator
+	 * @param project current project instance contains existing properties
+	 */
 	private void compileBuildMode(BUILD_MODE buildMode, Project project)
 	{
 		if (!executionBuildActivated || GradlePropertyAnalyser.isStructureBuildRequested(project))
@@ -74,6 +101,11 @@ public class MDE4CPPCompile extends DefaultTask
 		}
 	}
 
+	/**
+	 * compile specific C++ project with specific build mode
+	 * @param projectPath C++ project to compile
+	 * @param buildMode build mode indicator
+	 */
 	private void compileProjectWithBuildMode(String projectPath, BUILD_MODE buildMode)
 	{
 		String buildPath = projectPath + File.separator + ".cmake" + File.separator + buildMode.getName();
@@ -98,6 +130,14 @@ public class MDE4CPPCompile extends DefaultTask
 		}
 	}
 
+	/**
+	 * execute compilation
+	 * 
+	 * @param commandList commands
+	 * @param workingDir working directory
+	 * @param startingMessage starting message
+	 * @return true, if successfully compiled, otherwise false
+	 */
 	private boolean executeCompileProcess(List<String> commandList, File workingDir, String startingMessage)
 	{
 		try
@@ -128,6 +168,9 @@ public class MDE4CPPCompile extends DefaultTask
 		}
 	}
 
+	/**
+	 * entry point for this task
+	 */
 	@TaskAction
 	void executeCompile()
 	{
