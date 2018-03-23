@@ -45,6 +45,11 @@ class CommandBuilder
 			commandList.add("cmd");
 			commandList.add("/c");
 		}
+		else
+		{
+			commandList.add("/bin/sh");
+			commandList.add("-c");
+		}
 		return commandList;
 	}
 
