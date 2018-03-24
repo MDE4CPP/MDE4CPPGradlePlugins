@@ -21,7 +21,7 @@ dependencies {
 }
 
 group = 'tui.sse.mde4cpp'
-version = '0.2'
+version = '0.3'
 
 // The configuration example below shows the minimum required properties
 // configured to publish your plugin to the plugin portal
@@ -35,7 +35,7 @@ pluginBundle {
 		mde4cppCompilePlugin {
 			id = 'tui.sse.mde4cpp.mde4cpp-compile-plugin'
 			displayName = 'MDE4CPP Compile Plugin'
-			description = 'Gradle plugin to compile C++ projects of the MDE4CPP framework using cmake and gnu compiler. More information about MDE4CPP can be found under https://sse.tu-ilmenau.de/mde4cpp. Information about this plugin can be found under https://github.com/MDE4CPP/gradlePlugins.'
+			description = 'Gradle plugin to compile C++ projects of the MDE4CPP framework on Windows systems using cmake and c++ compiler. \n\nRelease notes version 0.3: \n - add support of Linux and MacOS systems \n\nMore information about MDE4CPP can be found under https://sse.tu-ilmenau.de/mde4cpp. Information about this plugin can be found under https://github.com/MDE4CPP/gradlePlugins.'
 		}
 	}
 }
