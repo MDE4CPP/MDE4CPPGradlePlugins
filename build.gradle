@@ -4,3 +4,10 @@ task createMDE4CPPCompilePlugin(dependsOn: ['MDE4CPPCompilePlugin:clean', 'MDE4C
 }
 
 tasks.getByPath('MDE4CPPCompilePlugin:jar').mustRunAfter tasks.getByPath('MDE4CPPCompilePlugin:clean')
+
+task createMDE4CPPGeneratePlugin(dependsOn: ['MDE4CPPGeneratePlugin:clean', 'MDE4CPPGeneratePlugin:jar']) {
+	group 'base'
+	description 'create gradle plugin to generate MDE4CPP related models'
+}
+
+tasks.getByPath('MDE4CPPGeneratePlugin:jar').mustRunAfter tasks.getByPath('MDE4CPPGeneratePlugin:clean')

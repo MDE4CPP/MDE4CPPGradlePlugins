@@ -1,0 +1,52 @@
+buildscript {
+	repositories {
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
+	}
+	dependencies {
+		classpath "com.gradle.publish:plugin-publish-plugin:0.9.10"
+	}
+}
+
+apply plugin: "com.gradle.plugin-publish"
+apply plugin: 'java'
+
+repositories {
+	jcenter()
+}
+
+dependencies {
+    compile gradleApi()
+}
+
+group = 'tui.sse.mde4cpp'
+version = '0.1'
+
+// The configuration example below shows the minimum required properties
+// configured to publish your plugin to the plugin portal
+pluginBundle {
+	website = 'http://www.gradle.org/'
+	vcsUrl = 'https://github.com/gradle/gradle'
+	description = 'Gradle plugins developed for MDE4CPP framework. More information about MDE4CPP can be found under https://sse.tu-ilmenau.de/mde4cpp.'
+	tags = ['MDE4CPP']
+
+	plugins {
+		mde4cppGeneratePlugin {
+			id = 'tui.sse.mde4cpp.mde4cpp-generate-plugin'
+			displayName = 'MDE4CPP Generate Plugin'
+			description = 'Gradle plugin to generate C++ code of ecore or UML models inside the MDE4CPP framework. \n\nRelease notes version 0.1: \n - Plugin to execute MDE4CPP generators\n\nMore information about MDE4CPP can be found under https://sse.tu-ilmenau.de/mde4cpp.\n Information about this plugin can be found under https://github.com/MDE4CPP/gradlePlugins.'
+		}
+	}
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+        resources {
+            srcDirs = ['src/resources']
+        }
+    }
+}
