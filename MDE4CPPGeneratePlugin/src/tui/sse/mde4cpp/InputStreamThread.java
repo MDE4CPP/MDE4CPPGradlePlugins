@@ -18,7 +18,7 @@ import java.io.InputStreamReader;
  * Stream data follow.
  *
  */
-class ProcessInputStreamThread extends Thread
+class InputStreamThread extends Thread
 {
 	private boolean m_isErrorSteam = false;
 	private String m_startingMessage = null;
@@ -35,7 +35,7 @@ class ProcessInputStreamThread extends Thread
 	 *            if {@code true} then {@code Systen.err.println()} is used.
 	 *            Otherwise, {@code Systen.out.println()} is used.
 	 */
-	public ProcessInputStreamThread(InputStream steam, boolean isErrorStream)
+	public InputStreamThread(InputStream steam, boolean isErrorStream)
 	{
 		m_stream = steam;
 		m_isErrorSteam = isErrorStream;

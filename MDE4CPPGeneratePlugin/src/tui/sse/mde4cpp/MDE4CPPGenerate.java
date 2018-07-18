@@ -96,7 +96,7 @@ public class MDE4CPPGenerate extends DefaultTask
 		// check model file - path configured and existing
 		if (m_modelFilePath == null)
 		{
-			m_modelFilePath = GradlePropertyAnalyser.getModelParameter(getProject());
+			m_modelFilePath = PropertyAnalyser.getModelParameter(getProject());
 			if (m_modelFilePath == null)
 			{
 				throw new GradleException("Property 'modelFilePath' is not set!\r\n" + "Configure the path to the model inside the gradle task or use parameter 'Model' (-PModel=<path>).");
@@ -117,7 +117,7 @@ public class MDE4CPPGenerate extends DefaultTask
 			m_modelFileName = file.getName();
 		}
 
-		if (GradlePropertyAnalyser.isStructuredOnlyRequested(getProject()))
+		if (PropertyAnalyser.isStructuredOnlyRequested(getProject()))
 		{
 			m_structureOnly = true;
 		}
@@ -216,9 +216,9 @@ public class MDE4CPPGenerate extends DefaultTask
 			processBuilder.directory(new File(workingDir));
 
 			Process process = processBuilder.start();
-			ProcessInputStreamThread inputThread = new ProcessInputStreamThread(process.getInputStream(), false);
+			InputStreamThread inputThread = new InputStreamThread(process.getInputStream(), false);
 			inputThread.setStartingMessage(startingMessage);
-			ProcessInputStreamThread errorThread = new ProcessInputStreamThread(process.getErrorStream(), true);
+			InputStreamThread errorThread = new InputStreamThread(process.getErrorStream(), true);
 			inputThread.start();
 			errorThread.start();
 

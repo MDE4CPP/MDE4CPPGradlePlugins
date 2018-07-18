@@ -13,7 +13,7 @@ import org.gradle.api.Project;
  * <li>{@code StructureOnly} or {@code SO} UML4CPP is used for UML models (except value {@code 0} is assigned.</li>
  * </ul>
  */
-class GradlePropertyAnalyser
+class PropertyAnalyser
 {
 	/**
 	 * return property 'model' from project
@@ -41,7 +41,17 @@ class GradlePropertyAnalyser
 	 */
 	static boolean isStructuredOnlyRequested(Project project)
 	{
-		return (project.hasProperty("StructureOnly") && (!project.property("StructureOnly").equals("0")))
-				|| (project.hasProperty("SO") && (!project.property("SO").equals("0")));
+		if (project.hasProperty("StructureOnly"))
+		{
+			return !project.property("StructureOnly").equals("0");
+		}
+		else if (project.hasProperty("SO"))
+		{
+			return !project.property("SO").equals("0");
+		}
+		else
+		{
+			return false;
+		}
 	}
 }
