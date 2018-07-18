@@ -146,6 +146,14 @@ public class MDE4CPPGenerate extends DefaultTask
 			throw new GradleException("The file extension '" + extension + "' is not supported! Only '.ecore' and '.uml' models are supported!");			
 		}
 		
+		if (FileStructureAnalyser.checkFileStructure(new File(m_modelFilePath)))
+		{
+			if (!m_workingDirectory.endsWith("model"))
+			{
+				m_workingDirectory += File.separator + "model";
+			}
+		}
+		
 		if (m_generatorPath != null)
 		{
 			m_generator.setPath(m_generatorPath);
