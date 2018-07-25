@@ -53,14 +53,7 @@ enum GENERATOR
 		}
 		else
 		{
-			m_path = mde4cppPath + File.separator + "application" + File.separator + "generator" + File.separator + name + ".jar";
-			File file = new File(m_path);
-			if (!file.isFile())
-			{
-				throw new GradleException("Generator '" + getName() + "' can not be found!" + 
-						System.lineSeparator() + "Expected path: '" + mde4cppPath +"'." +
-						System.lineSeparator() + "Please set 'MDE4CPP_HOME' correctly or use property 'generatorPath' for manual configuration.");
-			}
+			m_path = mde4cppPath + File.separator + "application" + File.separator + "generator" + File.separator + name + ".jar";			
 		}
 	}
 
@@ -82,6 +75,13 @@ enum GENERATOR
 	
 	String getPath()
 	{
+		File file = new File(m_path);
+		if (!file.isFile())
+		{
+			throw new GradleException("Generator '" + getName() + "' can not be found!" + 
+					System.lineSeparator() + "Expected path: '" + m_path +"'." +
+					System.lineSeparator() + "Please set 'MDE4CPP_HOME' correctly or use property 'generatorPath' for manual configuration.");
+		}
 		return m_path;
 	}
 }
