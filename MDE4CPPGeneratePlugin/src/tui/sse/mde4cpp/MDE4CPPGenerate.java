@@ -111,6 +111,16 @@ public class MDE4CPPGenerate extends DefaultTask
 			m_generator.setPath(generatorPath);
 		}
 	}
+
+	@Option(option = "model", description = "Configure the path to the model used by generator.")
+	public void setModelFilePath(String modelFilePath)
+	{
+		File file = new File(modelFilePath);
+		if (file.exists())
+		{
+			setModelFilePath(file);
+		}
+	}
 	
 	/**
 	 * Set model file path
@@ -134,7 +144,17 @@ public class MDE4CPPGenerate extends DefaultTask
 		
 		configureGenerator();		
 	}
+	
 
+	@Option(option = "structureOnly", description = "Indicates, that the generator UML4CPP should be used for a UML model.")
+	public void setStructureOnlyAsOption(boolean structureOnly)
+	{
+		if (structureOnly)
+		{
+			setStructureOnly(structureOnly);
+		}
+	}
+	
 	/**
 	 * indicates, that UML4CPP should be used to generate only the structure of the model, not the activity execution part
 	 * 
