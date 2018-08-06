@@ -1,7 +1,6 @@
 package tui.sse.mde4cpp;
 
 import java.io.File;
-import java.util.Iterator;
 
 import javax.swing.JOptionPane;
 
