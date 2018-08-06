@@ -58,14 +58,12 @@ public class MDE4CPPGenerate extends DefaultTask
 			setStructureOnly(structureOnly);
 		}
 		
-		System.out.println(m_generator.getPath());
 		return new File(m_generator.getPath());
 	}
 	
 	@OutputFile
 	public File getGradleBuildFile()
 	{
-		System.out.println(m_workingDirectory + File.separator + ".." + File.separator + "build.gradle");
 		return new File(m_workingDirectory + File.separator + ".." + File.separator + "build.gradle");
 	}	
 	
@@ -84,7 +82,6 @@ public class MDE4CPPGenerate extends DefaultTask
 			setModelFilePath(file);
 		}
 		
-		System.out.println(modelFile.getAbsolutePath());
 		return modelFile;
 	}
 	
@@ -95,7 +92,6 @@ public class MDE4CPPGenerate extends DefaultTask
 		{
 			m_targetFolder = m_workingDirectory + File.separator + m_srcGenFolder;
 		}
-		System.out.println(m_targetFolder);
 		return new File(m_targetFolder);
 	}
 
@@ -164,7 +160,6 @@ public class MDE4CPPGenerate extends DefaultTask
 	{
 		if (structureOnly != m_structureOnly)
 		{
-			m_structureOnly = structureOnly;
 			configureGenerator();
 		}
 	}
@@ -217,11 +212,6 @@ public class MDE4CPPGenerate extends DefaultTask
 	 */
 	private void configure()
 	{
-		// check model file - path configured and existing
-//		
-//
-
-		
 		if (FileStructureAnalyser.checkFileStructure(modelFile))
 		{
 			if (!m_workingDirectory.endsWith("model"))
