@@ -10,7 +10,7 @@ This Gradle plugin provides a task for compiling C++ projects using [CMake](http
 
 ```gradle
 plugins {
-  id "tui.sse.mde4cpp.mde4cpp-compile-plugin" version "0.2"
+  id "tui.sse.mde4cpp.mde4cpp-compile-plugin" version "0.3"
 }
 
 task compileProject(type: tui.sse.mde4cpp.MDE4CPPCompile) {
@@ -37,7 +37,7 @@ The property *make_parallel_jobs* can be used to configure the count of compile 
 
 Syntax: make_parallel_jobs={1..n}
 
-*make_parallel_jobs* has no upper limit, but it is advisable to do not exceed the core limit
+*make_parallel_jobs* has no upper limit, but it is advisable to do not exceed the core limit.
 If this property is not set, the system default is used. In general, parallism is not used.
 
 #### Configure build modes
@@ -66,4 +66,68 @@ Options:
  * If none of these properties is set, both build modes are performed.
  * Execution and structure project can be used in the same build. Both modes are executed one after the other.
  * Properties with assigned value *0* are ignored.
- 
+
+## MDE4CPPCompile-Plugin
+This Gradle plugin provides a task for generate C++ projects for Ecore and UML models using [MDE4CPP generators](https://sse.tu-ilmenau.de/mde4cpp).
+
+
+#### Simple configuration of MDE4CPPGenerate task inside build.gradle
+
+```gradle
+plugins {
+  id "tui.sse.mde4cpp.mde4cpp-generate-plugin" version "0.1"
+}
+
+task generateProject(type: tui.sse.mde4cpp.MDE4CPPGenerate) {
+	modelFilePath = file("path/to/model file") // essentially
+    structureOnly = true // only necessary if UML4CPP should be used
+}
+```
+
+This is the simple configuration of the MDE4CPPGenerate task.
+**Essential properties**
+ * *modelFilePath* - specifies the path of the model file
+ * *structureOnly* - indicated, that the generator UML4CPP should be used
+
+**Automatically defined properties**
+ * Used generator and its path:
+ 	* ecore4CPP for .ecore models
+ 	* fUML4CPP for .uml models, if property *structureOnly* is undefined or *0*
+ 	* UML4CPP for .uml models, if property *structureOnly* is defined and not *0*
+ * Generator path:
+ 	* Environment variable **MDE4CPP_HOME** has to be set to calculate generator path.
+ 	* Generators have to be located at: `$MDE4CPP_HOME/application/generator`
+ 	* The project folder structure should be defined as follows:
+ 		* project root folder
+ 			* folder `model` including model file
+ 			* folder `src_gen` including the generated C++ code
+ * Target folder:
+ 	* The code will be generated into folder {model folder}/../src_gen
+
+
+
+
+#### Extended configuration of MDE4CPPGenerate task inside build.gradle
+```gradle 
+plugins {
+  id "tui.sse.mde4cpp.mde4cpp-generate-plugin" version "0.1"
+}
+
+task generateProject(type: tui.sse.mde4cpp.MDE4CPPGenerate) {
+	modelFilePath = file("path/to/model file") // essentially
+    structureOnly = true // only necessary if UML4CPP should be used 
+    generatorPath = file("path/to/model file") // specify the path of generator which should be used
+    targetFolder = "path/to/source gen folder" // target folder for generated source code
+}
+```
+
+#### Parameters of MDE4CPPGenerate task
+
+```gradle
+gradle taskName -PModel=*path_to_model_file* // for ecore4CPP and fUML4CPP
+gradle taskName --model=*path_to_model_file* // alternative for ecore4CPP and fUML4CPP
+gradle taskName -PModel=*path_to_model_file* -PStructureOnly // for UML4CPP
+gradle taskName --model=*path_to_model_file* --structureOnly // alternative for UML4CPP
+
+```
+Parameter *Model* will only be considered, if property *modelFilePath* is not specified in *taskName*.

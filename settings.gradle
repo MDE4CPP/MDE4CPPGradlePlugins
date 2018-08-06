@@ -1,1 +1,1 @@
-include 'MDE4CPPCompilePlugin'
+include 'MDE4CPPCompilePlugin', 'MDE4CPPGeneratePlugin'

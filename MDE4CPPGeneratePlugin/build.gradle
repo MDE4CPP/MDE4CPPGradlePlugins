@@ -21,7 +21,7 @@ dependencies {
 }
 
 group = 'tui.sse.mde4cpp'
-version = '0.3'
+version = '0.2'
 
 // The configuration example below shows the minimum required properties
 // configured to publish your plugin to the plugin portal
@@ -32,10 +32,10 @@ pluginBundle {
 	tags = ['MDE4CPP']
 
 	plugins {
-		mde4cppCompilePlugin {
-			id = 'tui.sse.mde4cpp.mde4cpp-compile-plugin'
-			displayName = 'MDE4CPP Compile Plugin'
-			description = 'Gradle plugin to compile C++ projects of the MDE4CPP framework on Windows systems using cmake and c++ compiler. \n\nRelease notes version 0.3: \n - add support of Linux and MacOS systems \n\nMore information about MDE4CPP can be found under https://sse.tu-ilmenau.de/mde4cpp. Information about this plugin can be found under https://github.com/MDE4CPP/gradlePlugins.'
+		mde4cppGeneratePlugin {
+			id = 'tui.sse.mde4cpp.mde4cpp-generate-plugin'
+			displayName = 'MDE4CPP Generate Plugin'
+			description = 'Gradle plugin to generate C++ code of ecore or UML models inside the MDE4CPP framework. \n\nRelease notes version 0.1: \n - Plugin to execute MDE4CPP generators\n\nRelease notes version 0.2: \n - add up-to-date check\n\nMore information about MDE4CPP can be found under https://sse.tu-ilmenau.de/mde4cpp.\n Information about this plugin can be found under https://github.com/MDE4CPP/gradlePlugins.'
 		}
 	}
 }
