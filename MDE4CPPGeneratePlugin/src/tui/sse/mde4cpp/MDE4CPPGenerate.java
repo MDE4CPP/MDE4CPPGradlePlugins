@@ -160,6 +160,7 @@ public class MDE4CPPGenerate extends DefaultTask
 	{
 		if (structureOnly != m_structureOnly)
 		{
+			m_structureOnly = structureOnly;
 			configureGenerator();
 		}
 	}
