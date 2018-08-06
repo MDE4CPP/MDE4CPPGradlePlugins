@@ -16,16 +16,16 @@ import org.gradle.api.tasks.options.Option;
  * Gradle task class for generating C++ projects of Ecore and UML models using MDE4CPP Code Generator<br>
  * Configuration options:<br>
  * 1. using parameter on task call<br>
- * - PModel={path} - model path<br>
- * - PStructureOnly=1 / -PSO=1 to use UML4CPP on UML models, otherwise fUML4CPP is used for UML models, no effect on Ecore models<br>
+ * - PModel={path} or --model={path} - model path<br>
+ * - PStructureOnly=1 or -PSO=1 or --structureOnly - indicated to use UML4CPP on UML models, otherwise fUML4CPP is used for UML models, no effect on Ecore models<br>
  * <br>
- * 2. inside task declaration:<br>
+ * 3. inside task declaration:<br>
  * - essential parameters:<br>
- * \t- String modelFilePath - model path<br>
+ * \t- File modelFile - model path<br>
  * \t- Boolean structureOnly - if set to 1, UML4CPP is used on UML models, otherwise fUML4CPP is used for UML models, no effect on Ecore models<br>
  * <br>
  * - optional parameters (will be calculated if not configured) 
- * \t\tIf generator is not configured, ecore4CPP generator is used for .ecore models and UML4CPP is used for .uml models
+ * \t- If generator is not configured, ecore4CPP generator is used for .ecore models and UML4CPP is used for .uml models
  * \t- String targetFolder - target folder for generated source code. Default folder is {model folder}/../src_gen.<br><br>
  * Further information:<br>
  * - Environment variable 'MDE4CPP_HOME' has to be set to calculate generator path ($MDE4CPP_HOME/application/generator/*.jar)<br>
