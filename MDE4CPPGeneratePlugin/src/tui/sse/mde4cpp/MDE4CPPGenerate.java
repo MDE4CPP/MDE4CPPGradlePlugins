@@ -7,7 +7,6 @@ import java.util.List;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
 import org.gradle.api.tasks.InputFile;
-import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.TaskAction;
@@ -49,6 +48,51 @@ public class MDE4CPPGenerate extends DefaultTask
 	private String m_workingDirectory = "";
 	private String m_modelFileName = "";
 	
+	@InputFile
+	public File getGenerator()
+	{
+		System.out.println(m_generator.getPath());
+		return new File(m_generator.getPath());
+	}
+	
+	@OutputFile
+	public File getGradleBuildFile()
+	{
+		System.out.println(m_workingDirectory + File.separator + ".." + File.separator + "build.gradle");
+		return new File(m_workingDirectory + File.separator + ".." + File.separator + "build.gradle");
+	}	
+	
+	@InputFile
+	public File getModelFile()
+	{
+		System.out.println(modelFile.getAbsolutePath());
+		return modelFile;
+	}
+	
+	@OutputDirectory
+	public File getTargetFolder()
+	{
+		if (m_targetFolder == null)
+		{
+			m_targetFolder = m_workingDirectory + File.separator + m_srcGenFolder;
+		}
+		System.out.println(m_targetFolder);
+		return new File(m_targetFolder);
+	}
+
+	/**
+	 * Set target folder
+	 * 
+	 * @param generatorPath : String - specify target folder for generated code
+	 */
+	public void setGeneratorPath(String generatorPath)
+	{
+		if (generatorPath != null)
+		{
+			m_generator.setPath(generatorPath);
+		}
+	}
+
 	/**
 	 * Set model file path
 	 * 
@@ -70,38 +114,6 @@ public class MDE4CPPGenerate extends DefaultTask
 		m_modelFileName = modelFile.getName();
 		
 		configureGenerator();		
-	}	
-	
-	@InputFile
-	public File getModelFile()
-	{
-		System.out.println(modelFile.getAbsolutePath());
-		return modelFile;
-	}
-	
-	@InputFile
-	public File getGenerator()
-	{
-		System.out.println(m_generator.getPath());
-		return new File(m_generator.getPath());
-	}
-	
-	@InputFile
-	public File getGradleBuildFile()
-	{
-		System.out.println(m_workingDirectory + File.separator + ".." + File.separator + "build.gradle");
-		return new File(m_workingDirectory + File.separator + ".." + File.separator + "build.gradle");
-	}
-	
-	@OutputDirectory
-	public File getTargetFolder()
-	{
-		if (m_targetFolder == null)
-		{
-			m_targetFolder = m_workingDirectory + File.separator + m_srcGenFolder;
-		}
-		System.out.println(m_targetFolder);
-		return new File(m_targetFolder);
 	}
 	
 	/**
@@ -118,19 +130,6 @@ public class MDE4CPPGenerate extends DefaultTask
 	/**
 	 * Set target folder
 	 * 
-	 * @param generatorPath : String - specify target folder for generated code
-	 */
-	public void setGeneratorPath(String generatorPath)
-	{
-		if (generatorPath != null)
-		{
-			m_generator.setPath(generatorPath);
-		}
-	}
-	
-	/**
-	 * Set target folder
-	 * 
 	 * @param targetFolder : String - specify target folder for generated code
 	 */
 	public void setTargetFolder(String targetFolder)
@@ -138,7 +137,6 @@ public class MDE4CPPGenerate extends DefaultTask
 		m_targetFolder = targetFolder;
 	}
 
-	
 	private void configureGenerator()
 	{
 		if (m_modelFileName.isEmpty())
