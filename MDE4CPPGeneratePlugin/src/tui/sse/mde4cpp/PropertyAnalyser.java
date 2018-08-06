@@ -54,4 +54,9 @@ class PropertyAnalyser
 			return false;
 		}
 	}
+	
+	static boolean hasStructuredOnlyParameter(Project project)
+	{
+		return (project.hasProperty("StructureOnly") || project.hasProperty("SO"));
+	}
 }

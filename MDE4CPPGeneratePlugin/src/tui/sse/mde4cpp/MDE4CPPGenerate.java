@@ -10,6 +10,7 @@ import org.gradle.api.tasks.InputFile;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.tasks.options.Option;
 
 /**
  * Gradle task class for generating C++ projects of Ecore and UML models using MDE4CPP Code Generator<br>
@@ -51,8 +52,11 @@ public class MDE4CPPGenerate extends DefaultTask
 	@InputFile
 	public File getGenerator()
 	{
-		boolean structureOnly = PropertyAnalyser.isStructuredOnlyRequested(getProject());
-		setStructureOnly(structureOnly);
+		if (PropertyAnalyser.hasStructuredOnlyParameter(getProject()))
+		{
+			boolean structureOnly = PropertyAnalyser.isStructuredOnlyRequested(getProject());
+			setStructureOnly(structureOnly);
+		}
 		
 		System.out.println(m_generator.getPath());
 		return new File(m_generator.getPath());
@@ -107,7 +111,7 @@ public class MDE4CPPGenerate extends DefaultTask
 			m_generator.setPath(generatorPath);
 		}
 	}
-
+	
 	/**
 	 * Set model file path
 	 * 
@@ -130,7 +134,7 @@ public class MDE4CPPGenerate extends DefaultTask
 		
 		configureGenerator();		
 	}
-	
+
 	/**
 	 * indicates, that UML4CPP should be used to generate only the structure of the model, not the activity execution part
 	 * 
