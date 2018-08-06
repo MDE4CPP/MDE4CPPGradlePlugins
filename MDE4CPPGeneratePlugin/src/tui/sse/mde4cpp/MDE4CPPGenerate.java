@@ -51,10 +51,8 @@ public class MDE4CPPGenerate extends DefaultTask
 	@InputFile
 	public File getGenerator()
 	{
-		if (PropertyAnalyser.isStructuredOnlyRequested(getProject()))
-		{
-			setStructureOnly(true);
-		}
+		boolean structureOnly = PropertyAnalyser.isStructuredOnlyRequested(getProject());
+		setStructureOnly(structureOnly);
 		
 		System.out.println(m_generator.getPath());
 		return new File(m_generator.getPath());
@@ -140,8 +138,11 @@ public class MDE4CPPGenerate extends DefaultTask
 	 */
 	public void setStructureOnly(boolean structureOnly)
 	{
-		m_structureOnly = structureOnly;
-		configureGenerator();
+		if (structureOnly != m_structureOnly)
+		{
+			m_structureOnly = structureOnly;
+			configureGenerator();
+		}
 	}
 	
 	/**
