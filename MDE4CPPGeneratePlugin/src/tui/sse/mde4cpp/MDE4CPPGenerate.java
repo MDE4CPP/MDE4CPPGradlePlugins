@@ -51,6 +51,11 @@ public class MDE4CPPGenerate extends DefaultTask
 	@InputFile
 	public File getGenerator()
 	{
+		if (PropertyAnalyser.isStructuredOnlyRequested(getProject()))
+		{
+			setStructureOnly(true);
+		}
+		
 		System.out.println(m_generator.getPath());
 		return new File(m_generator.getPath());
 	}
@@ -65,6 +70,18 @@ public class MDE4CPPGenerate extends DefaultTask
 	@InputFile
 	public File getModelFile()
 	{
+		if (modelFile == null)
+		{
+			String modelFilePath = PropertyAnalyser.getModelParameter(getProject());
+			if (modelFilePath == null)
+			{
+				throw new GradleException("Property 'modelFilePath' is not set!\r\n" + "Configure the path to the model inside the gradle task or use parameter 'Model' (-PModel=<path>).");
+			}
+			
+			File file = new File(modelFilePath);
+			setModelFilePath(file);
+		}
+		
 		System.out.println(modelFile.getAbsolutePath());
 		return modelFile;
 	}
@@ -176,21 +193,9 @@ public class MDE4CPPGenerate extends DefaultTask
 	private void configure()
 	{
 		// check model file - path configured and existing
-//		if (modelFile == null)
-//		{
-//			String modelFilePath = PropertyAnalyser.getModelParameter(getProject());
-//			if (modelFilePath == null)
-//			{
-//				throw new GradleException("Property 'modelFilePath' is not set!\r\n" + "Configure the path to the model inside the gradle task or use parameter 'Model' (-PModel=<path>).");
-//			}
-//			
-//			modelFile= new File(modelFilePath);
-//		}
+//		
 //
-//		if (PropertyAnalyser.isStructuredOnlyRequested(getProject()))
-//		{
-//			m_structureOnly = true;
-//		}
+
 		
 		if (FileStructureAnalyser.checkFileStructure(modelFile))
 		{
