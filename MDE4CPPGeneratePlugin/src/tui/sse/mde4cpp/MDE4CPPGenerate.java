@@ -6,6 +6,10 @@ import java.util.List;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
+import org.gradle.api.tasks.InputFile;
+import org.gradle.api.tasks.Internal;
+import org.gradle.api.tasks.OutputDirectory;
+import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.TaskAction;
 
 /**
@@ -35,24 +39,69 @@ import org.gradle.api.tasks.TaskAction;
  */
 public class MDE4CPPGenerate extends DefaultTask
 {
-	private String m_modelFilePath = null;
+	private File modelFile = null;
 	private boolean m_structureOnly = false;
 
-	private String m_generatorPath = null;
 	private String m_targetFolder = null;
+	private String m_srcGenFolder = ".." + File.separator + "src_gen";
 
 	private GENERATOR m_generator = GENERATOR.ECORE4CPP;
-	private String m_workingDirectory = null;
-	private String m_modelFileName = null;
+	private String m_workingDirectory = "";
+	private String m_modelFileName = "";
 	
 	/**
 	 * Set model file path
 	 * 
-	 * @param modelFilePath : String - specify model file path
+	 * @param modelFilePath : File - specify model file
 	 */
-	public void setModelFilePath(String modelFilePath)
+	public void setModelFilePath(File modelFilePath)
 	{
-		this.m_modelFilePath = modelFilePath;
+		this.modelFile = modelFilePath;
+		if (this.modelFile == null)
+		{
+			throw new GradleException("The property 'modelFile' is not configured!");
+		}
+		if (!modelFile.isFile())
+		{
+			throw new GradleException("The file '" + modelFile.getAbsolutePath() + "' is not an existing file!");
+		}
+			
+		m_workingDirectory = modelFile.getParent();
+		m_modelFileName = modelFile.getName();
+		
+		configureGenerator();		
+	}	
+	
+	@InputFile
+	public File getModelFile()
+	{
+		System.out.println(modelFile.getAbsolutePath());
+		return modelFile;
+	}
+	
+	@InputFile
+	public File getGenerator()
+	{
+		System.out.println(m_generator.getPath());
+		return new File(m_generator.getPath());
+	}
+	
+	@InputFile
+	public File getGradleBuildFile()
+	{
+		System.out.println(m_workingDirectory + File.separator + ".." + File.separator + "build.gradle");
+		return new File(m_workingDirectory + File.separator + ".." + File.separator + "build.gradle");
+	}
+	
+	@OutputDirectory
+	public File getTargetFolder()
+	{
+		if (m_targetFolder == null)
+		{
+			m_targetFolder = m_workingDirectory + File.separator + m_srcGenFolder;
+		}
+		System.out.println(m_targetFolder);
+		return new File(m_targetFolder);
 	}
 	
 	/**
@@ -63,9 +112,9 @@ public class MDE4CPPGenerate extends DefaultTask
 	public void setStructureOnly(boolean structureOnly)
 	{
 		m_structureOnly = structureOnly;
+		configureGenerator();
 	}
 	
-
 	/**
 	 * Set target folder
 	 * 
@@ -73,7 +122,10 @@ public class MDE4CPPGenerate extends DefaultTask
 	 */
 	public void setGeneratorPath(String generatorPath)
 	{
-		m_generatorPath = generatorPath;
+		if (generatorPath != null)
+		{
+			m_generator.setPath(generatorPath);
+		}
 	}
 	
 	/**
@@ -87,47 +139,19 @@ public class MDE4CPPGenerate extends DefaultTask
 	}
 
 	
-	/**
-	 * check and complete configuration
-	 * 
-	 */
-	private void configure()
+	private void configureGenerator()
 	{
-		// check model file - path configured and existing
-		if (m_modelFilePath == null)
+		if (m_modelFileName.isEmpty())
 		{
-			m_modelFilePath = PropertyAnalyser.getModelParameter(getProject());
-			if (m_modelFilePath == null)
-			{
-				throw new GradleException("Property 'modelFilePath' is not set!\r\n" + "Configure the path to the model inside the gradle task or use parameter 'Model' (-PModel=<path>).");
-			}
-		}
-
-		File file = new File(m_modelFilePath);
-		if (!file.isFile())
-		{
-			throw new GradleException("The file '" + file.getAbsolutePath() + "' does not exists!");
-		}
-		if (m_workingDirectory == null)
-		{
-			m_workingDirectory = file.getParent();
-		}
-		if (m_modelFileName == null)
-		{
-			m_modelFileName = file.getName();
-		}
-
-		if (PropertyAnalyser.isStructuredOnlyRequested(getProject()))
-		{
-			m_structureOnly = true;
+			return;
 		}
 		
-		int index = m_modelFilePath.lastIndexOf('.');
+		int index = m_modelFileName.lastIndexOf('.');
 		if (index == -1) 
 		{
-			throw new GradleException("The file '" + file.getAbsolutePath() + "' is not supported! Only '.ecore' and '.uml' files are supported!");
+			throw new GradleException("The file '" + m_modelFileName + "' is not supported! Only '.ecore' and '.uml' files are supported!");
 		}
-		String extension = m_modelFilePath.substring(index+1);
+		String extension = m_modelFileName.substring(index+1);
 		
 		if (extension.compareTo("ecore") == 0)
 		{
@@ -145,8 +169,32 @@ public class MDE4CPPGenerate extends DefaultTask
 		{
 			throw new GradleException("The file extension '" + extension + "' is not supported! Only '.ecore' and '.uml' models are supported!");			
 		}
+	}
+	
+	/**
+	 * check and complete configuration
+	 * 
+	 */
+	private void configure()
+	{
+		// check model file - path configured and existing
+//		if (modelFile == null)
+//		{
+//			String modelFilePath = PropertyAnalyser.getModelParameter(getProject());
+//			if (modelFilePath == null)
+//			{
+//				throw new GradleException("Property 'modelFilePath' is not set!\r\n" + "Configure the path to the model inside the gradle task or use parameter 'Model' (-PModel=<path>).");
+//			}
+//			
+//			modelFile= new File(modelFilePath);
+//		}
+//
+//		if (PropertyAnalyser.isStructuredOnlyRequested(getProject()))
+//		{
+//			m_structureOnly = true;
+//		}
 		
-		if (FileStructureAnalyser.checkFileStructure(new File(m_modelFilePath)))
+		if (FileStructureAnalyser.checkFileStructure(modelFile))
 		{
 			if (!m_workingDirectory.endsWith("model"))
 			{
@@ -154,41 +202,22 @@ public class MDE4CPPGenerate extends DefaultTask
 			}
 		}
 		
-		if (m_generatorPath != null)
-		{
-			m_generator.setPath(m_generatorPath);
-		}
-		
 		// check generator
-		file = new File(m_generator.getPath());
+		File file = new File(m_generator.getPath());
 		if (!file.isFile())
 		{
-			if (m_generatorPath == null)
-			{
-				throw new GradleException("Generator '" + m_generator.getName() + "' can not be found!" + 
+			throw new GradleException("Generator '" + m_generator.getName() + "' can not be found!" + 
 											System.lineSeparator() + "Expected path: '" + m_generator.getPath() +"'." +
-											System.lineSeparator() + "Please set 'MDE4CPP_HOME' correctly or use property 'generatorPath' for manual configuration.");
-			}
-			else
-			{
-				throw new GradleException("User specified generator path '" + m_generatorPath + "' is not a file!");
-			}
+											System.lineSeparator() + "Please set 'MDE4CPP_HOME' correctly or use property 'generatorPath' for manual configuration.");			
 		}
 		
-		if (m_targetFolder == null)
+		file = new File(m_targetFolder);
+		if (!file.isDirectory())
 		{
-			m_targetFolder = "../src_gen";
-		}
-		else 
-		{
-			file = new File(m_workingDirectory + File.separator + m_targetFolder);
-			if (!file.isDirectory())
+			file.mkdirs();
+			if (!file.exists())
 			{
-				file.mkdirs();
-				if (!file.exists())
-				{
-					throw new GradleException("Could not create target folder '" + file.getAbsolutePath() + "'");
-				}
+				throw new GradleException("Could not create target folder '" + file.getAbsolutePath() + "'");
 			}
 		}
 	}
