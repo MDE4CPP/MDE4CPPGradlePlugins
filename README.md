@@ -117,7 +117,7 @@ task generateProject(type: tui.sse.mde4cpp.MDE4CPPGenerate) {
 	modelFilePath = file("path/to/model file") // essentially
     structureOnly = true // only necessary if UML4CPP should be used 
     generatorPath = file("path/to/model file") // specify the path of generator which should be used
-    targetFolder = "path/to/source gen folder" // target folder for generated source code, relative from model folder
+    targetFolder = "path/to/source gen folder" // target folder for generated source code
 }
 ```
 
@@ -125,7 +125,9 @@ task generateProject(type: tui.sse.mde4cpp.MDE4CPPGenerate) {
 
 ```gradle
 gradle taskName -PModel=*path_to_model_file* // for ecore4CPP and fUML4CPP
+gradle taskName --model=*path_to_model_file* // alternative for ecore4CPP and fUML4CPP
 gradle taskName -PModel=*path_to_model_file* -PStructureOnly // for UML4CPP
+gradle taskName --model=*path_to_model_file* --structureOnly // alternative for UML4CPP
 
 ```
 Parameter *Model* will only be considered, if property *modelFilePath* is not specified in *taskName*.
