@@ -2,8 +2,6 @@ package tui.sse.mde4cpp;
 
 import java.io.File;
 
-import org.gradle.api.GradleException;
-
 /**
  * This enumeration represents build modes provided by the MDE4CPP framework for
  * the compilation of C++ projects.<br>
@@ -75,13 +73,6 @@ enum GENERATOR
 	
 	String getPath()
 	{
-		File file = new File(m_path);
-		if (!file.isFile())
-		{
-			throw new GradleException("Generator '" + getName() + "' can not be found!" + 
-					System.lineSeparator() + "Expected path: '" + m_path +"'." +
-					System.lineSeparator() + "Please set 'MDE4CPP_HOME' correctly or use property 'generatorPath' for manual configuration.");
-		}
 		return m_path;
 	}
 }
