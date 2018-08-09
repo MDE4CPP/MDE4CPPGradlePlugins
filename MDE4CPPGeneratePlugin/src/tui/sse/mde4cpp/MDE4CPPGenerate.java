@@ -1,15 +1,14 @@
 package tui.sse.mde4cpp;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
-import org.gradle.api.Project;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.tasks.InputFile;
+import org.gradle.api.tasks.InputFiles;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.TaskAction;
@@ -51,6 +50,7 @@ public class MDE4CPPGenerate extends DefaultTask
 	private GENERATOR m_generator = GENERATOR.ECORE4CPP;
 	private String m_workingDirectory = "";
 	private String m_modelFileName = "";
+	private List<String> m_dependentModels = null;
 	
 	@InputFile
 	public File getGenerator()
@@ -88,80 +88,18 @@ public class MDE4CPPGenerate extends DefaultTask
 		return modelFile;
 	}
 	
-	//@InputFiles
-	public FileCollection getDependencyModels()
+	@InputFiles
+	public FileCollection getDependentModels()
 	{
-		Project project = getProject();
-		FileCollection collection = project.files();		
-		
-		List<File> modelFiles = collectModels(getRootProjectFolder(project));
-		for (File modelFile : modelFiles)
+		if (m_dependentModels == null)
 		{
-			System.out.println("   "  + modelFile.getName() + "  " + modelFile.getPath());
+			return getProject().files();
 		}
-		
-		return collection;
-	}
-	
-	
-	
-	private File getRootProjectFolder(Project project)
-	{
-		FileCollection collection = project.files(project.getPath());
-		
-		File file = collection.getSingleFile();
-		File parentFile = file.getParentFile();
-		while (parentFile != null)
+		else
 		{
-			File buildFile = new File(parentFile.getAbsolutePath() + File.separator + "build.gradle");
-			if (buildFile.exists())
-			{
-				file = parentFile;
-				parentFile = file.getParentFile();
-			}
-			else
-			{
-				parentFile = null;
-			}
+			FileCollection collection = FileStructureAnalyser.getDependentModels(getProject().getRootProject(), m_dependentModels);
+			return collection;
 		}
-		return file;
-	}
-	
-	private List<File> collectModels(File file)
-	{	
-		final FileFilter filter = new FileFilter() 
-		{
-			@Override
-			public boolean accept(File pathname) 
-			{
-				if (pathname.isDirectory())
-				{
-					return true;
-				}
-				String name = pathname.getName();
-				int index = name.lastIndexOf('.');
-				if (index == -1)
-				{
-					return false;
-				}
-				String extension = name.substring(index+1);
-				return extension.compareToIgnoreCase("uml") == 0 || extension.compareToIgnoreCase("ecore") == 0 ;
-			}
-		};
-		
-		List<File> fileList = new LinkedList<>();
-		for (File childFile : file.listFiles(filter)) 
-		{
-			if (childFile.isDirectory())
-			{
-				fileList.addAll(collectModels(childFile));
-			}
-			else
-			{
-				fileList.add(childFile);
-			}
-		}
-		return fileList;
 	}
 	
 	@OutputDirectory
@@ -174,6 +112,17 @@ public class MDE4CPPGenerate extends DefaultTask
 		return new File(m_targetFolder);
 	}
 
+	
+	public void setDependentModels(List<String> dependentModels)
+	{
+		if (FileStructureAnalyser.isExperimentalMode(getProject()))
+		{
+//			m_dependentModels = new LinkedList<String>();
+//			m_dependentModels.add(dependentModels);
+			m_dependentModels = dependentModels;
+		}
+	}
+	
 	/**
 	 * Set target folder
 	 * 
@@ -376,7 +325,6 @@ public class MDE4CPPGenerate extends DefaultTask
 	@TaskAction
 	void executeGenerate()
 	{
-		getDependencyModels();
 		configure();
 		generateModel();
 	}
