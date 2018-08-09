@@ -67,7 +67,7 @@ Options:
  * Execution and structure project can be used in the same build. Both modes are executed one after the other.
  * Properties with assigned value *0* are ignored.
 
-## MDE4CPPCompile-Plugin
+## MDE4CPPGenerate-Plugin
 This Gradle plugin provides a task for generate C++ projects for Ecore and UML models using [MDE4CPP generators](https://sse.tu-ilmenau.de/mde4cpp).
 
 
@@ -131,3 +131,23 @@ gradle taskName --model=*path_to_model_file* --structureOnly // alternative for 
 
 ```
 Parameter *Model* will only be considered, if property *modelFilePath* is not specified in *taskName*.
+
+#### Experimental mode ####
+To use the experimental mode, property *experimentalMode* with value *true* has to be defined. It is recommended to do this inside the file *gradle.properties*.
+
+Experimental mode enabled the following feature(s):
+ * add related models to up-to-date check
+ 	* configure *relatedModels* inside a MDE4CPPGenerate task using the model name (without extension)
+ 	* Only models will be considered, which can be found inside current folder or subfolders. 
+ 	* *.uml* and *.ecore* are supported
+
+```gradle 
+plugins {
+  id "tui.sse.mde4cpp.mde4cpp-generate-plugin" version "0.1"
+}
+
+task generateProject(type: tui.sse.mde4cpp.MDE4CPPGenerate) {
+	...
+    relatedModels = ['modelName1', 'modelName2']
+}
+```

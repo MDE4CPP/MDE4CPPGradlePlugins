@@ -50,7 +50,7 @@ public class MDE4CPPGenerate extends DefaultTask
 	private GENERATOR m_generator = GENERATOR.ECORE4CPP;
 	private String m_workingDirectory = "";
 	private String m_modelFileName = "";
-	private List<String> m_dependentModels = null;
+	private List<String> m_relatedModels = null;
 	
 	@InputFile
 	public File getGenerator()
@@ -89,16 +89,15 @@ public class MDE4CPPGenerate extends DefaultTask
 	}
 	
 	@InputFiles
-	public FileCollection getDependentModels()
+	public FileCollection getRelatedModels()
 	{
-		if (m_dependentModels == null)
+		if (m_relatedModels == null)
 		{
 			return getProject().files();
 		}
 		else
 		{
-			FileCollection collection = FileStructureAnalyser.getDependentModels(getProject().getRootProject(), m_dependentModels);
-			return collection;
+			return FileStructureAnalyser.getRelatedModels(getProject().getRootProject(), m_relatedModels);			
 		}
 	}
 	
@@ -113,13 +112,15 @@ public class MDE4CPPGenerate extends DefaultTask
 	}
 
 	
-	public void setDependentModels(List<String> dependentModels)
+	public void setRelatedModels(List<String> relatedModels)
 	{
 		if (FileStructureAnalyser.isExperimentalMode(getProject()))
 		{
-//			m_dependentModels = new LinkedList<String>();
-//			m_dependentModels.add(dependentModels);
-			m_dependentModels = dependentModels;
+			m_relatedModels = relatedModels;
+		}
+		else
+		{
+			m_relatedModels = null;
 		}
 	}
 	

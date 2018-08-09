@@ -141,7 +141,7 @@ public class FileStructureAnalyser
 		file.renameTo(new File(targetPath + File.separator + file.getName()));
 	}
 	
-	public static FileCollection getDependentModels(Project project, List<String> modelNames)
+	public static FileCollection getRelatedModels(Project project, List<String> modelNames)
 	{
 		List<File> modelFiles = collectModels(project.getRootDir());
 		
