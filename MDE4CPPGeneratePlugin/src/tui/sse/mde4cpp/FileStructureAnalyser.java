@@ -141,6 +141,11 @@ public class FileStructureAnalyser
 		file.renameTo(new File(targetPath + File.separator + file.getName()));
 	}
 	
+	/**
+	 * @param project Gradle project
+	 * @param modelNames list of related model names
+	 * @return file set of related models
+	 */
 	public static FileCollection getRelatedModels(Project project, List<String> modelNames)
 	{
 		List<File> modelFiles = collectModels(project.getRootDir());
@@ -202,6 +207,10 @@ public class FileStructureAnalyser
 		return fileList;
 	}
 	
+	/**
+	 * @param project Gradle project
+	 * @return true for experimental mode activation, otherwise false
+	 */
 	static boolean isExperimentalMode(Project project)
 	{
 		if (project.hasProperty("experimentalMode"))

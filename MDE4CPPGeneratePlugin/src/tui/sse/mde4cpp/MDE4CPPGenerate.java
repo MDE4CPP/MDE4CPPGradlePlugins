@@ -52,6 +52,9 @@ public class MDE4CPPGenerate extends DefaultTask
 	private String m_modelFileName = "";
 	private List<String> m_relatedModels = null;
 	
+	/**
+	 * @return generator file
+	 */
 	@InputFile
 	public File getGenerator()
 	{
@@ -64,12 +67,18 @@ public class MDE4CPPGenerate extends DefaultTask
 		return new File(m_generator.getPath());
 	}
 	
+	/**
+	 * @return gradle build file
+	 */
 	@OutputFile
 	public File getGradleBuildFile()
 	{
 		return new File(m_workingDirectory + File.separator + ".." + File.separator + "build.gradle");
 	}	
 	
+	/**
+	 * @return model file
+	 */
 	@InputFile
 	public File getModelFile()
 	{
@@ -88,6 +97,9 @@ public class MDE4CPPGenerate extends DefaultTask
 		return modelFile;
 	}
 	
+	/**
+	 * @return file list of related models
+	 */
 	@InputFiles
 	public FileCollection getRelatedModels()
 	{
@@ -101,6 +113,9 @@ public class MDE4CPPGenerate extends DefaultTask
 		}
 	}
 	
+	/**
+	 * @return target folder
+	 */
 	@OutputDirectory
 	public File getTargetFolder()
 	{
@@ -112,6 +127,9 @@ public class MDE4CPPGenerate extends DefaultTask
 	}
 
 	
+	/**
+	 * @param relatedModels - name list of related model
+	 */
 	public void setRelatedModels(List<String> relatedModels)
 	{
 		if (FileStructureAnalyser.isExperimentalMode(getProject()))
@@ -137,6 +155,9 @@ public class MDE4CPPGenerate extends DefaultTask
 		}
 	}
 
+	/**
+	 * @param modelFilePath - model path
+	 */
 	@Option(option = "model", description = "Configure the path to the model used by generator.")
 	public void setModelFilePath(String modelFilePath)
 	{
@@ -171,6 +192,9 @@ public class MDE4CPPGenerate extends DefaultTask
 	}
 	
 
+	/**
+	 * @param structureOnly - indicates, that the generator UML4COO should be used for a UML model
+	 */
 	@Option(option = "structureOnly", description = "Indicates, that the generator UML4CPP should be used for a UML model.")
 	public void setStructureOnlyAsOption(boolean structureOnly)
 	{
@@ -289,7 +313,7 @@ public class MDE4CPPGenerate extends DefaultTask
 	/**
 	 * execute generation
 	 * 
-	 * @param List<String> commands
+	 * @param List command list
 	 * @param String working directory
 	 * @param String starting message
 	 */

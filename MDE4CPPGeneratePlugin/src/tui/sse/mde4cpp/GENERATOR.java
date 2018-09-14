@@ -66,11 +66,17 @@ enum GENERATOR
 		return m_name;
 	}
 	
+	/**
+	 * @param path generator path
+	 */
 	void setPath(String path)
 	{
 		m_path = path;
 	}
 	
+	/**
+	 * @return generator path
+	 */
 	String getPath()
 	{
 		return m_path;
