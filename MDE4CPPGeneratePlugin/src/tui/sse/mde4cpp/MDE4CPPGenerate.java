@@ -188,7 +188,7 @@ public class MDE4CPPGenerate extends DefaultTask
 		m_workingDirectory = modelFile.getParent();
 		m_modelFileName = modelFile.getName();
 		
-		configureGenerator();		
+		configureGenerator();
 	}
 	
 
@@ -258,6 +258,8 @@ public class MDE4CPPGenerate extends DefaultTask
 		{
 			throw new GradleException("The file extension '" + extension + "' is not supported! Only '.ecore' and '.uml' models are supported!");			
 		}
+
+		setDependsOn(getProject().getRootProject().getTasksByName(m_generator.getCreateTaskName(), true));
 	}
 	
 	/**
