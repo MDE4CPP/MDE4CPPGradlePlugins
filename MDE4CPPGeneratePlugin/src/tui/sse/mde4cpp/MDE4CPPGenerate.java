@@ -6,7 +6,9 @@ import java.util.List;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
+import org.gradle.api.file.FileCollection;
 import org.gradle.api.tasks.InputFile;
+import org.gradle.api.tasks.InputFiles;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.TaskAction;
@@ -48,7 +50,11 @@ public class MDE4CPPGenerate extends DefaultTask
 	private GENERATOR m_generator = GENERATOR.ECORE4CPP;
 	private String m_workingDirectory = "";
 	private String m_modelFileName = "";
+	private List<String> m_relatedModels = null;
 	
+	/**
+	 * @return generator file
+	 */
 	@InputFile
 	public File getGenerator()
 	{
@@ -61,12 +67,18 @@ public class MDE4CPPGenerate extends DefaultTask
 		return new File(m_generator.getPath());
 	}
 	
+	/**
+	 * @return gradle build file
+	 */
 	@OutputFile
 	public File getGradleBuildFile()
 	{
 		return new File(m_workingDirectory + File.separator + ".." + File.separator + "build.gradle");
 	}	
 	
+	/**
+	 * @return model file
+	 */
 	@InputFile
 	public File getModelFile()
 	{
@@ -85,6 +97,25 @@ public class MDE4CPPGenerate extends DefaultTask
 		return modelFile;
 	}
 	
+	/**
+	 * @return file list of related models
+	 */
+	@InputFiles
+	public FileCollection getRelatedModels()
+	{
+		if (m_relatedModels == null)
+		{
+			return getProject().files();
+		}
+		else
+		{
+			return FileStructureAnalyser.getRelatedModels(getProject().getRootProject(), m_relatedModels);			
+		}
+	}
+	
+	/**
+	 * @return target folder
+	 */
 	@OutputDirectory
 	public File getTargetFolder()
 	{
@@ -95,6 +126,22 @@ public class MDE4CPPGenerate extends DefaultTask
 		return new File(m_targetFolder);
 	}
 
+	
+	/**
+	 * @param relatedModels - name list of related model
+	 */
+	public void setRelatedModels(List<String> relatedModels)
+	{
+		if (FileStructureAnalyser.isExperimentalMode(getProject()))
+		{
+			m_relatedModels = relatedModels;
+		}
+		else
+		{
+			m_relatedModels = null;
+		}
+	}
+	
 	/**
 	 * Set target folder
 	 * 
@@ -108,6 +155,9 @@ public class MDE4CPPGenerate extends DefaultTask
 		}
 	}
 
+	/**
+	 * @param modelFilePath - model path
+	 */
 	@Option(option = "model", description = "Configure the path to the model used by generator.")
 	public void setModelFilePath(String modelFilePath)
 	{
@@ -138,10 +188,13 @@ public class MDE4CPPGenerate extends DefaultTask
 		m_workingDirectory = modelFile.getParent();
 		m_modelFileName = modelFile.getName();
 		
-		configureGenerator();		
+		configureGenerator();
 	}
 	
 
+	/**
+	 * @param structureOnly - indicates, that the generator UML4COO should be used for a UML model
+	 */
 	@Option(option = "structureOnly", description = "Indicates, that the generator UML4CPP should be used for a UML model.")
 	public void setStructureOnlyAsOption(boolean structureOnly)
 	{
@@ -150,6 +203,8 @@ public class MDE4CPPGenerate extends DefaultTask
 			setStructureOnly(structureOnly);
 		}
 	}
+	
+	
 	
 	/**
 	 * indicates, that UML4CPP should be used to generate only the structure of the model, not the activity execution part
@@ -181,7 +236,6 @@ public class MDE4CPPGenerate extends DefaultTask
 		{
 			return;
 		}
-		
 		int index = m_modelFileName.lastIndexOf('.');
 		if (index == -1) 
 		{
@@ -205,6 +259,8 @@ public class MDE4CPPGenerate extends DefaultTask
 		{
 			throw new GradleException("The file extension '" + extension + "' is not supported! Only '.ecore' and '.uml' models are supported!");			
 		}
+
+		setDependsOn(getProject().getRootProject().getTasksByName(m_generator.getCreateTaskName(), true));
 	}
 	
 	/**
@@ -260,7 +316,7 @@ public class MDE4CPPGenerate extends DefaultTask
 	/**
 	 * execute generation
 	 * 
-	 * @param List<String> commands
+	 * @param List command list
 	 * @param String working directory
 	 * @param String starting message
 	 */

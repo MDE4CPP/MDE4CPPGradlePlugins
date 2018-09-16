@@ -14,33 +14,32 @@
 	<classpathentry kind="var" path="GRADLE_HOME/lib/commons-io-2.4.jar"/>
 	<classpathentry kind="var" path="GRADLE_HOME/lib/commons-lang-2.6.jar"/>
 	<classpathentry kind="var" path="GRADLE_HOME/lib/fastutil-7.2.1-min.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-base-services-4.8.1.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-base-services-groovy-4.8.1.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-build-cache-4.8.1.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-build-option-4.8.1.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-cli-4.8.1.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-core-4.8.1.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-core-api-4.8.1.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-docs-4.8.1.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-installation-beacon-4.8.1.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-jvm-services-4.8.1.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-kotlin-dsl-0.17.5.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-kotlin-dsl-provider-plugins-0.17.5.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-kotlin-dsl-provider-spi-0.17.5.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-kotlin-dsl-tooling-builders-0.17.5.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-kotlin-dsl-tooling-models-0.17.5.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-launcher-4.8.1.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-logging-4.8.1.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-messaging-4.8.1.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-model-core-4.8.1.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-model-groovy-4.8.1.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-native-4.8.1.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-persistent-cache-4.8.1.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-process-services-4.8.1.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-resources-4.8.1.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-runtime-api-info-4.8.1.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-tooling-api-4.8.1.jar"/>
-	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-wrapper-4.8.1.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-base-services-4.9.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-base-services-groovy-4.9.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-build-cache-4.9.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-build-option-4.9.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-cli-4.9.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-core-4.9.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-core-api-4.9.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-docs-4.9.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-installation-beacon-4.9.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-jvm-services-4.9.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-kotlin-dsl-0.18.4.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-kotlin-dsl-provider-plugins-0.18.4.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-kotlin-dsl-tooling-builders-0.18.4.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-kotlin-dsl-tooling-models-0.18.4.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-launcher-4.9.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-logging-4.9.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-messaging-4.9.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-model-core-4.9.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-model-groovy-4.9.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-native-4.9.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-persistent-cache-4.9.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-process-services-4.9.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-resources-4.9.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-runtime-api-info-4.9.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-tooling-api-4.9.jar"/>
+	<classpathentry kind="var" path="GRADLE_HOME/lib/gradle-wrapper-4.9.jar"/>
 	<classpathentry kind="var" path="GRADLE_HOME/lib/groovy-all-2.4.12.jar"/>
 	<classpathentry kind="var" path="GRADLE_HOME/lib/guava-jdk5-17.0.jar"/>
 	<classpathentry kind="var" path="GRADLE_HOME/lib/jansi-1.14.jar"/>

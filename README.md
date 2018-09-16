@@ -33,11 +33,11 @@ Properties can be used to modify tasks during calling. A property has to specifi
 
 
 #### Count of parallel jobs:
-The property *make_parallel_jobs* can be used to configure the count of compile jobs, which can be executed in parallel.
+The property *workerCount* can be used to configure the count of compile jobs, which can be executed in parallel.
 
-Syntax: make_parallel_jobs={1..n}
+Syntax: workerCount={1..n}
 
-*make_parallel_jobs* has no upper limit, but it is advisable to do not exceed the core limit.
+*workerCount* has no upper limit, but it is advisable to do not exceed the core limit.
 If this property is not set, the system default is used. In general, parallism is not used.
 
 #### Configure build modes
@@ -67,7 +67,7 @@ Options:
  * Execution and structure project can be used in the same build. Both modes are executed one after the other.
  * Properties with assigned value *0* are ignored.
 
-## MDE4CPPCompile-Plugin
+## MDE4CPPGenerate-Plugin
 This Gradle plugin provides a task for generate C++ projects for Ecore and UML models using [MDE4CPP generators](https://sse.tu-ilmenau.de/mde4cpp).
 
 
@@ -131,3 +131,23 @@ gradle taskName --model=*path_to_model_file* --structureOnly // alternative for 
 
 ```
 Parameter *Model* will only be considered, if property *modelFilePath* is not specified in *taskName*.
+
+#### Experimental mode ####
+To use the experimental mode, property *experimentalMode* with value *true* has to be defined. It is recommended to do this inside the file *gradle.properties*.
+
+Experimental mode enabled the following feature(s):
+ * add related models to up-to-date check
+ 	* configure *relatedModels* inside a MDE4CPPGenerate task using the model name (without extension)
+ 	* Only models will be considered, which can be found inside current folder or subfolders. 
+ 	* *.uml* and *.ecore* are supported
+
+```gradle 
+plugins {
+  id "tui.sse.mde4cpp.mde4cpp-generate-plugin" version "0.1"
+}
+
+task generateProject(type: tui.sse.mde4cpp.MDE4CPPGenerate) {
+	...
+    relatedModels = ['modelName1', 'modelName2']
+}
+```

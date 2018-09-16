@@ -2,8 +2,6 @@ package tui.sse.mde4cpp;
 
 import java.io.File;
 
-import org.gradle.api.GradleException;
-
 /**
  * This enumeration represents build modes provided by the MDE4CPP framework for
  * the compilation of C++ projects.<br>
@@ -20,31 +18,33 @@ enum GENERATOR
 	/**
 	 * This literal indicated to use ecore4CPP generator.
 	 */
-	ECORE4CPP("ecore4CPP"),
+	ECORE4CPP("ECORE4CPP", "createEcore4CPP"),
 	/**
 	 * This literal indicated to use UML4CPP generator.
 	 */
-	UML4CPP("UML4CPP"),
+	UML4CPP("UML4CPP", "createUML4CPP"),
 	/**
 	 * This literal indicated to use fUML4CPP generator.
 	 */
-	FUML4CPP("fUML4CPP");
+	FUML4CPP("FUML4CPP", "createFUML4CPP");
 	
 	/**
 	 * generator name
 	 */
 	private String m_name;
 	private String m_path;
+	private String m_createTaskName;
 
 	/**
 	 * Constructor for BUILD_MODE literals configuring {@code name}
 	 *
-	 * @param name
-	 *            conform string representation
+	 * @param name conform string representation
+	 * @param createTaskName name of Gradle task to create generator file
 	 */
-	private GENERATOR(String name)
+	private GENERATOR(String name, String createTaskName)
 	{
 		m_name = name;
+		m_createTaskName = createTaskName;
 		String mde4cppPath = System.getenv("MDE4CPP_HOME");
 		if (mde4cppPath == null)
 		{
@@ -58,6 +58,15 @@ enum GENERATOR
 	}
 
 	/**
+	 * 
+	 * @return name of Gradle task to create generator file
+	 */
+	String getCreateTaskName()
+	{
+		return m_createTaskName;
+	}
+	
+	/**
 	 * Returns string representation of a build mode, which can be directly used
 	 * inside the MDE4CPP framework
 	 *
@@ -68,20 +77,19 @@ enum GENERATOR
 		return m_name;
 	}
 	
+	/**
+	 * @param path generator path
+	 */
 	void setPath(String path)
 	{
 		m_path = path;
 	}
 	
+	/**
+	 * @return generator path
+	 */
 	String getPath()
 	{
-		File file = new File(m_path);
-		if (!file.isFile())
-		{
-			throw new GradleException("Generator '" + getName() + "' can not be found!" + 
-					System.lineSeparator() + "Expected path: '" + m_path +"'." +
-					System.lineSeparator() + "Please set 'MDE4CPP_HOME' correctly or use property 'generatorPath' for manual configuration.");
-		}
 		return m_path;
 	}
 }

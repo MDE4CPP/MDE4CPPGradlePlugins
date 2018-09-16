@@ -55,6 +55,10 @@ class PropertyAnalyser
 		}
 	}
 	
+	/**
+	 * @param project Gradle project
+	 * @return true if parameter 'structureOnly' is configured, otherwise false
+	 */
 	static boolean hasStructuredOnlyParameter(Project project)
 	{
 		return (project.hasProperty("StructureOnly") || project.hasProperty("SO"));

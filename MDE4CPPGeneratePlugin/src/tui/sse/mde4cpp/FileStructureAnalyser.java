@@ -1,10 +1,16 @@
 package tui.sse.mde4cpp;
 
 import java.io.File;
+import java.io.FileFilter;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
 import org.gradle.api.GradleException;
+import org.gradle.api.Project;
+import org.gradle.api.file.ConfigurableFileCollection;
+import org.gradle.api.file.FileCollection;
 
 
 /**
@@ -133,5 +139,87 @@ public class FileStructureAnalyser
 	{
 
 		file.renameTo(new File(targetPath + File.separator + file.getName()));
+	}
+	
+	/**
+	 * @param project Gradle project
+	 * @param modelNames list of related model names
+	 * @return file set of related models
+	 */
+	public static FileCollection getRelatedModels(Project project, List<String> modelNames)
+	{
+		List<File> modelFiles = collectModels(project.getRootDir());
+		
+		FileCollection collection = project.files();
+		ConfigurableFileCollection col = project.files(); 
+		for (File modelFile : modelFiles)
+		{
+			for (String modelName : modelNames)
+			{
+				if (modelFile.getName().compareToIgnoreCase(modelName + ".uml") == 0)
+				{
+					collection = collection.plus(col.from(modelFile));
+				}
+				else if (modelFile.getName().compareToIgnoreCase(modelName + ".ecore") == 0)
+				{
+					collection = collection.plus(col.from(modelFile));
+				}
+			}
+		}
+
+		return collection;
+	}
+	
+	private static List<File> collectModels(File file)
+	{	
+		final FileFilter filter = new FileFilter() 
+		{
+			@Override
+			public boolean accept(File pathname) 
+			{
+				if (pathname.isDirectory())
+				{
+					return true;
+				}
+				String name = pathname.getName();
+				int index = name.lastIndexOf('.');
+				if (index == -1)
+				{
+					return false;
+				}
+				String extension = name.substring(index+1);
+				return extension.compareToIgnoreCase("uml") == 0 || extension.compareToIgnoreCase("ecore") == 0 ;
+			}
+		};
+		
+		List<File> fileList = new LinkedList<>();
+		for (File childFile : file.listFiles(filter)) 
+		{
+			if (childFile.isDirectory())
+			{
+				fileList.addAll(collectModels(childFile));
+			}
+			else
+			{
+				fileList.add(childFile);
+			}
+		}
+		return fileList;
+	}
+	
+	/**
+	 * @param project Gradle project
+	 * @return true for experimental mode activation, otherwise false
+	 */
+	static boolean isExperimentalMode(Project project)
+	{
+		if (project.hasProperty("experimentalMode"))
+		{
+			return Boolean.valueOf(project.property("experimentalMode").toString());
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

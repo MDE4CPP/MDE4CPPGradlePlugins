@@ -12,9 +12,5 @@ public class MDE4CPPGeneratePlugin implements Plugin<Project>
 	@Override
 	public void apply(Project project)
 	{
-//		project.getTasks().create("generate", MDE4CPPGenerate.class, (task) ->
-//		{
-//			task.setProjectFolder(new File(".").getAbsolutePath());
-//		});
 	}
 }
