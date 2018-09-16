@@ -10,7 +10,7 @@ This Gradle plugin provides a task for compiling C++ projects using [CMake](http
 
 ```gradle
 plugins {
-  id "tui.sse.mde4cpp.mde4cpp-compile-plugin" version "0.3"
+  id "tui.sse.mde4cpp.mde4cpp-compile-plugin" version "0.4"
 }
 
 task compileProject(type: tui.sse.mde4cpp.MDE4CPPCompile) {
