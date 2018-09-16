@@ -204,6 +204,8 @@ public class MDE4CPPGenerate extends DefaultTask
 		}
 	}
 	
+	
+	
 	/**
 	 * indicates, that UML4CPP should be used to generate only the structure of the model, not the activity execution part
 	 * 
@@ -234,7 +236,6 @@ public class MDE4CPPGenerate extends DefaultTask
 		{
 			return;
 		}
-		
 		int index = m_modelFileName.lastIndexOf('.');
 		if (index == -1) 
 		{

@@ -33,11 +33,11 @@ Properties can be used to modify tasks during calling. A property has to specifi
 
 
 #### Count of parallel jobs:
-The property *make_parallel_jobs* can be used to configure the count of compile jobs, which can be executed in parallel.
+The property *workerCount* can be used to configure the count of compile jobs, which can be executed in parallel.
 
-Syntax: make_parallel_jobs={1..n}
+Syntax: workerCount={1..n}
 
-*make_parallel_jobs* has no upper limit, but it is advisable to do not exceed the core limit.
+*workerCount* has no upper limit, but it is advisable to do not exceed the core limit.
 If this property is not set, the system default is used. In general, parallism is not used.
 
 #### Configure build modes
