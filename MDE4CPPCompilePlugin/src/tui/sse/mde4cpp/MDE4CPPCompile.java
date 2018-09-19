@@ -1,11 +1,13 @@
 package tui.sse.mde4cpp;
 
 import java.io.File;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
 import org.gradle.api.Project;
+import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.TaskAction;
 
 /**
@@ -21,6 +23,29 @@ public class MDE4CPPCompile extends DefaultTask
 	private boolean executionBuildActivated = false;
 	private String warningForExecProjectExisting = null;
 
+	/**
+	 * @return all project properties as string, which affect the compiling result
+	 */
+	@Input
+	public String getProjectProperties()
+	{
+		Project project = getProject();
+		List<String> propertyList = new LinkedList<String>();
+		List<String[]> propsList = GradlePropertyAnalyser.getPropertiesForCMake(project);
+		for (String[] variable : propsList)
+		{
+			propertyList.add(variable[0] + "=" + variable[1]);
+		}
+		propertyList.add("DEBUG=" + String.valueOf(GradlePropertyAnalyser.isDebugBuildModeRequestet(project)));
+		propertyList.add("RELEASE=" + String.valueOf(GradlePropertyAnalyser.isReleaseBuildModeRequested(project)));
+		propertyList.add("STRUCTURE=" + String.valueOf(GradlePropertyAnalyser.isStructureBuildRequested(project)));
+		propertyList.add("EXECUTION=" + String.valueOf(GradlePropertyAnalyser.isExecutionBuildRequested(project)));
+		String listedProperties = String.join(",", propertyList);
+		
+		return listedProperties;
+	}
+	
+	
 	/**
 	 * Returns the project folder path
 	 * @return path
@@ -144,6 +169,11 @@ public class MDE4CPPCompile extends DefaultTask
 		{
 			ProcessBuilder processBuilder = new ProcessBuilder(commandList);
 			processBuilder.directory(workingDir);
+			List<String[]> additionEnvironment = GradlePropertyAnalyser.getPropertiesForCMake(getProject());
+			for (String[] variable : additionEnvironment)
+			{
+				processBuilder.environment().put(variable[0], variable[1]);
+			}
 
 			Process process = processBuilder.start();
 			ProcessInputStreamThread inputThread = new ProcessInputStreamThread(process.getInputStream(), false);

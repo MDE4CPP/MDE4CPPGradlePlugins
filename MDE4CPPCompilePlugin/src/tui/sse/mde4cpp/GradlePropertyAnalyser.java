@@ -195,15 +195,16 @@ class GradlePropertyAnalyser
 	 * @param project current project instance contains existing properties
 	 * @return list with related property string: 'property name'='property value'
 	 */
-	static List<String> getPropertiesForCMake(Project project)
+	static List<String[]> getPropertiesForCMake(Project project)
 	{
-		List<String> propertyList = new LinkedList<String>();
+		List<String[]> propertyList = new LinkedList<String[]>();
 		Set<String> keySet = project.getProperties().keySet();
 		for (String key : keySet)
 		{
 			if (key.startsWith("DEBUG_") || key.startsWith("CMAKE_") || key.startsWith("USER_"))
 			{
-				propertyList.add(key + "=" + project.findProperty(key).toString());
+				String[] variableSet = {key, project.findProperty(key).toString()};
+				propertyList.add(variableSet);
 			}
 		}
 		
