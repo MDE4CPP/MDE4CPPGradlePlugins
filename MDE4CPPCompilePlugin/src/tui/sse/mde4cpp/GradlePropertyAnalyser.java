@@ -1,5 +1,9 @@
 package tui.sse.mde4cpp;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 import org.gradle.api.Project;
 
 /**
@@ -180,5 +184,29 @@ class GradlePropertyAnalyser
 		{
 			return !project.hasProperty("EXECUTION") && !project.hasProperty("E") && !project.hasProperty("STRUCTURE") && !project.hasProperty("S");
 		}
+	}
+	
+	/**
+	 * select all project properties, which start with:
+	 * - DEBUG_
+	 * - CMAKE_
+	 * - USER_
+	 * 
+	 * @param project current project instance contains existing properties
+	 * @return list with related property string: 'property name'='property value'
+	 */
+	static List<String> getPropertiesForCMake(Project project)
+	{
+		List<String> propertyList = new LinkedList<String>();
+		Set<String> keySet = project.getProperties().keySet();
+		for (String key : keySet)
+		{
+			if (key.startsWith("DEBUG_") || key.startsWith("CMAKE_") || key.startsWith("USER_"))
+			{
+				propertyList.add(key + "=" + project.findProperty(key).toString());
+			}
+		}
+		
+		return propertyList;
 	}
 }
