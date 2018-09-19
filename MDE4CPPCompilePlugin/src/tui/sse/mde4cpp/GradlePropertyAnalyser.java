@@ -15,7 +15,7 @@ import org.gradle.api.Project;
  * <ul>
  * <li>Creates option for make execution defining the count of jobs executed in
  * parallel
- * <li>Gradle property syntax: workerCount={@code value}</li>
+ * <li>Gradle property syntax: WORKER={@code value}</li>
  * <li>{@code value} should be greater than 0.</li>
  * <li>{@code value} has no upper limit, but it is advisable to do not exceed
  * the core limit.
@@ -65,9 +65,9 @@ class GradlePropertyAnalyser
 	 */
 	static String getParallelJobsFlag(Project project)
 	{
-		if (project.hasProperty("workerCount"))
+		if (project.hasProperty("WORKER"))
 		{
-			return " -j" + project.property("workerCount");
+			return " -j" + project.property("WORKER");
 		}
 		else
 		{
