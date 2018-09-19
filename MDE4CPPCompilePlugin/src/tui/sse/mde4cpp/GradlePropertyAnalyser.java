@@ -79,9 +79,23 @@ class GradlePropertyAnalyser
 	 * @return {@code true} if {@core DEBUG} is requested, otherwise {@code false}
 	 */
 	static boolean isDebugBuildModeRequestet(Project project)
-	{
-		return (project.hasProperty("DEBUG") && (!project.property("DEBUG").equals("0"))) || (project.hasProperty("D") && (!project.property("D").equals("0")))
-				|| (!project.hasProperty("RELEASE") && !project.hasProperty("R") && !project.hasProperty("DEBUG") && !project.hasProperty("D"));
+	{		
+		if (project.hasProperty("DEBUG") && project.hasProperty("D"))
+		{
+			return !project.property("DEBUG").equals("0") && !project.property("D").equals("0");
+		}
+		else if (project.hasProperty("DEBUG"))
+		{
+			return !project.property("DEBUG").equals("0");
+		}
+		else if (project.hasProperty("D"))
+		{
+			return !project.property("D").equals("0");
+		}
+		else 
+		{
+			return !project.hasProperty("RELEASE") && !project.hasProperty("R") && !project.hasProperty("DEBUG") && !project.hasProperty("D");
+		}
 	}
 
 	/**
@@ -93,9 +107,23 @@ class GradlePropertyAnalyser
 	 */
 	static boolean isReleaseBuildModeRequested(Project project)
 	{
-		return (project.hasProperty("RELEASE") && (!project.property("RELEASE").equals("0")))
-				|| (project.hasProperty("R") && (!project.property("R").equals("0")))
-				|| (!project.hasProperty("RELEASE") && !project.hasProperty("R") && !project.hasProperty("DEBUG") && !project.hasProperty("D"));
+		
+		if (project.hasProperty("RELEASE") && project.hasProperty("R"))
+		{
+			return !project.property("RELEASE").equals("0") && !project.property("R").equals("0");
+		}
+		else if (project.hasProperty("RELEASE"))
+		{
+			return !project.property("RELEASE").equals("0");
+		}
+		else if (project.hasProperty("R"))
+		{
+			return !project.property("R").equals("0");
+		}
+		else 
+		{
+			return !project.hasProperty("RELEASE") && !project.hasProperty("R") && !project.hasProperty("DEBUG") && !project.hasProperty("D");
+		}
 	}
 
 	/**
@@ -108,9 +136,22 @@ class GradlePropertyAnalyser
 	 */
 	static boolean isExecutionBuildRequested(Project project)
 	{
-		return (project.hasProperty("EXECUTION") && (!project.property("EXECUTION").equals("0")))
-				|| (project.hasProperty("E") && (!project.property("E").equals("0")))
-				|| (!project.hasProperty("STRUCTURE") && !project.hasProperty("S") && !project.hasProperty("EXECUTION") && !project.hasProperty("E"));
+		if (project.hasProperty("EXECUTION") && project.hasProperty("E"))
+		{
+			return !project.property("EXECUTION").equals("0") && !project.property("E").equals("0");
+		}
+		else if (project.hasProperty("EXECUTION"))
+		{
+			return !project.property("EXECUTION").equals("0");
+		}
+		else if (project.hasProperty("E"))
+		{
+			return !project.property("E").equals("0");
+		}
+		else 
+		{
+			return !project.hasProperty("EXECUTION") && !project.hasProperty("E") && !project.hasProperty("STRUCTURE") && !project.hasProperty("S");
+		}
 	}
 
 	/**
@@ -123,8 +164,21 @@ class GradlePropertyAnalyser
 	 */
 	static boolean isStructureBuildRequested(Project project)
 	{
-		return (project.hasProperty("STRUCTURE") && (!project.property("STRUCTURE").equals("0")))
-				|| (project.hasProperty("S") && (!project.property("S").equals("0")))
-				|| (!project.hasProperty("STRUCTURE") && !project.hasProperty("S") && !project.hasProperty("EXECUTION") && !project.hasProperty("E"));
+		if (project.hasProperty("STRUCTURE") && project.hasProperty("S"))
+		{
+			return !project.property("STRUCTURE").equals("0") && !project.property("S").equals("0");
+		}
+		else if (project.hasProperty("STRUCTURE"))
+		{
+			return !project.property("STRUCTURE").equals("0");
+		}
+		else if (project.hasProperty("S"))
+		{
+			return !project.property("S").equals("0");
+		}
+		else 
+		{
+			return !project.hasProperty("EXECUTION") && !project.hasProperty("E") && !project.hasProperty("STRUCTURE") && !project.hasProperty("S");
+		}
 	}
 }
