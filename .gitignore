@@ -2,3 +2,6 @@
 .gradle/
 build/
 bin/
+.project
+.metadata/
+MDE4CPPGeneratePlugin/.settings/org.eclipse.ltk.core.refactoring.prefs

@@ -26,7 +26,11 @@ enum GENERATOR
 	/**
 	 * This literal indicated to use fUML4CPP generator.
 	 */
-	FUML4CPP("fUML4CPP", "createFUML4CPP");
+	FUML4CPP("fUML4CPP", "createFUML4CPP"),
+	/**
+	 * This literal indicated to use UML4CPP_test generator.
+	 */
+	UML4CPP_test("UML4CPP_test", "createUML4CPP_test");
 	
 	/**
 	 * generator name
