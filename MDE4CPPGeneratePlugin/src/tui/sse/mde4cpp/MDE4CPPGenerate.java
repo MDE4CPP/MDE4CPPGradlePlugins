@@ -43,9 +43,11 @@ public class MDE4CPPGenerate extends DefaultTask
 {
 	private File modelFile = null;
 	private boolean m_structureOnly = false;
+	private boolean m_test = false;
 
 	private String m_targetFolder = null;
 	private String m_srcGenFolder = ".." + File.separator + "src_gen";
+	private String m_testSrcGenFolder = ".." + File.separator + "test_src_gen";
 
 	private GENERATOR m_generator = GENERATOR.ECORE4CPP;
 	private String m_workingDirectory = "";
@@ -62,6 +64,11 @@ public class MDE4CPPGenerate extends DefaultTask
 		{
 			boolean structureOnly = PropertyAnalyser.isStructuredOnlyRequested(getProject());
 			setStructureOnly(structureOnly);
+		}
+		if( PropertyAnalyser.hasTestParameter(getProject()) ) 
+		{
+			boolean test = PropertyAnalyser.isTestRequested(getProject());
+			setTest(test);	
 		}
 		
 		return new File(m_generator.getPath());
@@ -193,7 +200,7 @@ public class MDE4CPPGenerate extends DefaultTask
 	
 
 	/**
-	 * @param structureOnly - indicates, that the generator UML4COO should be used for a UML model
+	 * @param structureOnly - indicates, that the generator UML4CPP should be used for a UML model
 	 */
 	@Option(option = "structureOnly", description = "Indicates, that the generator UML4CPP should be used for a UML model.")
 	public void setStructureOnlyAsOption(boolean structureOnly)
@@ -216,6 +223,35 @@ public class MDE4CPPGenerate extends DefaultTask
 		if (structureOnly != m_structureOnly)
 		{
 			m_structureOnly = structureOnly;
+			configureGenerator();
+		}
+	}
+	
+
+	/**
+	 * @param test - indicates, that a test generator should be used for a model
+	 */
+	@Option(option = "test", description = "Indicates, that the generator UML4CPP_test should be used for a UML model.")
+	public void setTestAsOption(boolean test)
+	{
+		if (test)
+		{
+			setTest(test);
+		}
+	}
+	
+	
+	
+	/**
+	 * indicates, that a tests generator should be used to generate the model
+	 * 
+	 * @param test : Boolean - true to generate tests, false to normal generation 
+	 */
+	public void setTest(boolean test)
+	{
+		if (test != m_test)
+		{
+			m_test = test;
 			configureGenerator();
 		}
 	}
@@ -243,21 +279,23 @@ public class MDE4CPPGenerate extends DefaultTask
 		}
 		String extension = m_modelFileName.substring(index+1);
 		
-		if (extension.compareTo("ecore") == 0)
-		{
-			m_generator = GENERATOR.ECORE4CPP;
-		}
-		else if (extension.compareTo("uml") == 0 && !m_structureOnly)
-		{
-			m_generator = GENERATOR.FUML4CPP;
-		}
-		else if (extension.compareTo("uml") == 0 && m_structureOnly)
-		{
-			m_generator = GENERATOR.UML4CPP;
-		}
-		else
-		{
-			throw new GradleException("The file extension '" + extension + "' is not supported! Only '.ecore' and '.uml' models are supported!");			
+		switch( extension  ) {
+			case "ecore":
+				m_generator = GENERATOR.ECORE4CPP;
+				break;
+			case "uml":
+				if( m_test ) {
+					m_generator = GENERATOR.UML4CPP_test;
+				} else {
+					if( m_structureOnly ) {
+						m_generator = GENERATOR.UML4CPP;
+					} else {
+						m_generator = GENERATOR.FUML4CPP;
+					}
+				}
+				break;
+			default:
+				throw new GradleException("The file extension '" + extension + "' is not supported! Only '.ecore' and '.uml' models are supported!");		
 		}
 
 		setDependsOn(getProject().getRootProject().getTasksByName(m_generator.getCreateTaskName(), true));

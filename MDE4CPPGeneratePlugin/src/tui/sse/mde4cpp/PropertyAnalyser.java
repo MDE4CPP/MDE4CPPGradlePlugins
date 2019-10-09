@@ -63,4 +63,36 @@ class PropertyAnalyser
 	{
 		return (project.hasProperty("StructureOnly") || project.hasProperty("SO"));
 	}
+
+	/**
+	 * Checks, if project should be generated with a Test Generator (structure only mode and tests)
+	 * 
+	 * @param project
+	 *            current project instance contains existing properties
+	 * @return {@code true} if {@core Test} is requested, otherwise {@code false}
+	 */
+	static boolean isTestRequested(Project project)
+	{
+		if (project.hasProperty("Test"))
+		{
+			return !project.property("Test").equals("0");
+		}
+		else if (project.hasProperty("T"))
+		{
+			return !project.property("T").equals("0");
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	/**
+	 * @param project Gradle project
+	 * @return true if parameter 'test' is configured, otherwise false
+	 */
+	static boolean hasTestParameter(Project project)
+	{
+		return (project.hasProperty("Test") || project.hasProperty("T"));
+	}
 }
