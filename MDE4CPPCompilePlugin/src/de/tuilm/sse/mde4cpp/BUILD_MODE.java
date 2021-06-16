@@ -1,4 +1,4 @@
-package tui.sse.mde4cpp;
+package de.tuilm.sse.mde4cpp;
 
 /**
  * This enumeration represents build modes provided by the MDE4CPP framework for

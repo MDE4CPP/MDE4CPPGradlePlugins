@@ -1,4 +1,4 @@
-package tui.sse.mde4cpp;
+package de.tuilm.sse.mde4cpp;
 
 import java.io.File;
 

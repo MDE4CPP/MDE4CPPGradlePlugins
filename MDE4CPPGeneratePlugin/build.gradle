@@ -5,7 +5,7 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath "com.gradle.publish:plugin-publish-plugin:0.9.10"
+		classpath "com.gradle.publish:plugin-publish-plugin:0.15.0"
 	}
 }
 
@@ -17,25 +17,43 @@ repositories {
 }
 
 dependencies {
-    compile gradleApi()
+    implementation gradleApi()
 }
 
-group = 'tui.sse.mde4cpp'
-version = '0.5'
+group = 'de.tuilm.see'
+version = '0.6.0'
 
 // The configuration example below shows the minimum required properties
 // configured to publish your plugin to the plugin portal
 pluginBundle {
-	website = 'http://www.gradle.org/'
-	vcsUrl = 'https://github.com/gradle/gradle'
-	description = 'Gradle plugins developed for MDE4CPP framework. More information about MDE4CPP can be found under https://sse.tu-ilmenau.de/mde4cpp.'
+	website = 'https://sse.tu-ilmenau.de/mde4cpp/'
+	vcsUrl = 'https://github.com/MDE4CPP/MDE4CPPGradlePlugins'
+	description = 'Plugins developed for MDE4CPP framework.'
 	tags = ['MDE4CPP']
 
 	plugins {
 		mde4cppGeneratePlugin {
-			id = 'tui.sse.mde4cpp.mde4cpp-generate-plugin'
+			id = 'de.tuilm.see.mde4cpp.gradle-generate-plugin'
 			displayName = 'MDE4CPP Generate Plugin'
-			description = 'Gradle plugin to generate C++ code of ecore or UML models inside the MDE4CPP framework. \n\nRelease notes version 0.1: \n - Plugin to execute MDE4CPP generators\n\nRelease notes version 0.2: \n - add up-to-date check\n\nRelease notes version 0.3: \n - add related models to up-to-date check (only available in experimental mode)\n - add experimental mode (declare property \'experimentalMode=true\' inside gradle.properties\n\nRelease notes version 0.4: \n - add dependency to generator\n - rename compile property "make_parallel_jobs" to "workerCount"\n\nMore information about MDE4CPP can be found under https://sse.tu-ilmenau.de/mde4cpp.\n Information about this plugin can be found under https://github.com/MDE4CPP/gradlePlugins.'
+			description = 'Plugin to generate C++ code of ecore or UML models inside the MDE4CPP framework.\n\n' +
+
+				'Release notes version 0.3:\n' +
+				'  - add related models to up-to-date check (only available in experimental mode)\n' +
+				'  - add experimental mode (declare property \'experimentalMode=true\' inside gradle.properties\n\n' +
+				
+				'Release notes version 0.4:\n' +
+				'  - add dependency to generator\n' +
+				'  - rename compile property "make_parallel_jobs" to "workerCount"\n\n' +
+				
+				'Release notes version 0.5:\n' +
+				'  - sync version number with MDE4CPP Compile Plugin only\n\n' +
+				
+				'Release notes version 0.6:\n' +
+				'  - updates for gradle 7+\n' +
+				'  - updates for openjdk16\n' +
+				
+				'More information about MDE4CPP can be found under https://sse.tu-ilmenau.de/mde4cpp.' +
+				'Source code is available at https://github.com/MDE4CPP/gradlePlugins.'
 		}
 	}
 }
