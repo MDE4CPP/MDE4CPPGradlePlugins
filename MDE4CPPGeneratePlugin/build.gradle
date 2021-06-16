@@ -21,7 +21,7 @@ dependencies {
 }
 
 group = 'tui.sse.mde4cpp'
-version = '0.4'
+version = '0.5'
 
 // The configuration example below shows the minimum required properties
 // configured to publish your plugin to the plugin portal
