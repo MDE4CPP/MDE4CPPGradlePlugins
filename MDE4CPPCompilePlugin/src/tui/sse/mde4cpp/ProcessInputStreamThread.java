@@ -1,4 +1,4 @@
-package de.tuilm.sse.mde4cpp;
+package tui.sse.mde4cpp;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -18,7 +18,7 @@ import java.io.InputStreamReader;
  * Stream data follow.
  *
  */
-class InputStreamThread extends Thread
+class ProcessInputStreamThread extends Thread
 {
 	private boolean m_isErrorSteam = false;
 	private String m_startingMessage = null;
@@ -35,7 +35,7 @@ class InputStreamThread extends Thread
 	 *            if {@code true} then {@code Systen.err.println()} is used.
 	 *            Otherwise, {@code Systen.out.println()} is used.
 	 */
-	public InputStreamThread(InputStream steam, boolean isErrorStream)
+	public ProcessInputStreamThread(InputStream steam, boolean isErrorStream)
 	{
 		m_stream = steam;
 		m_isErrorSteam = isErrorStream;

@@ -1,4 +1,4 @@
-package de.tuilm.sse.mde4cpp;
+package tui.sse.mde4cpp;
 
 import org.gradle.api.Project;
 

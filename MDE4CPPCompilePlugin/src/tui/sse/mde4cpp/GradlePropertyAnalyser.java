@@ -1,4 +1,4 @@
-package de.tuilm.sse.mde4cpp;
+package tui.sse.mde4cpp;
 
 import java.util.LinkedList;
 import java.util.List;
