@@ -50,6 +50,7 @@ public class MDE4CPPCompile extends DefaultTask
 	 * Returns the project folder path
 	 * @return path
 	 */
+	@Input
 	public String getProjectFolder()
 	{
 		return projectFolder;
