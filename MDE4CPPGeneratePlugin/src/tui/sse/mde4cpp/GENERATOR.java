@@ -18,15 +18,15 @@ enum GENERATOR
 	/**
 	 * This literal indicated to use ecore4CPP generator.
 	 */
-	ECORE4CPP("ecore4CPP", "createEcore4CPP"),
+	ECORE4CPP("ecore4CPP", "buildGenerator_ecore4CPP"),
 	/**
 	 * This literal indicated to use UML4CPP generator.
 	 */
-	UML4CPP("UML4CPP", "createUML4CPP"),
+	UML4CPP("UML4CPP", "buildGenerator_UML4CPP"),
 	/**
 	 * This literal indicated to use fUML4CPP generator.
 	 */
-	FUML4CPP("fUML4CPP", "createFUML4CPP");
+	FUML4CPP("fUML4CPP", "buildGenerator_fUML4CPP");
 	
 	/**
 	 * generator name
